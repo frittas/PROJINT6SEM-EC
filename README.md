@@ -10,5 +10,3 @@
 - [ ] **Fase 5: Testes e Validação**
 - [ ] **Fase 6: Implantação e Treinamento**
 - [ ] **Fase 7: Monitoramento e Manutenção**
-
----

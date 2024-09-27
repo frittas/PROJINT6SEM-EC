@@ -8,8 +8,8 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'sua_senha',
-  database: 'login_db'
+  password: 'murilo', //Colocar a senha do seu sql
+  database: 'projbase' //Nome do Schema para teste
 });
 
 // Conectar ao MySQL
@@ -34,7 +34,7 @@ app.post('/login', (req, res) => {
 });
 
 // Iniciar o servidor
-const PORT = 5000;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

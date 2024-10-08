@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './login.css';
-import { FaRegUserCircle, FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock } from "react-icons/fa";
+import { Navigate } from 'react-router-dom'; // Importar Navigate
 
 const Login = () => {
-  // Estado para armazenar as credenciais
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [shouldRedirect, setShouldRedirect] = useState(false); // Estado para controle de redirecionamento
 
-  // Função para lidar com o envio do formulário
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevenir o comportamento padrão de recarregar a página
 
@@ -23,7 +23,8 @@ const Login = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert('Login bem-sucedido: ' + data.message); //MODIFICAR ESTA PARTE PARA O REDIRECIONAMENTO
+        // Define o estado para redirecionar
+        setShouldRedirect(true);
       } else {
         alert('Erro: ' + data.message);
       }
@@ -32,43 +33,50 @@ const Login = () => {
     }
   };
 
+  // Verifica se deve redirecionar
+  if (shouldRedirect) {
+    return <Navigate to="/dashboard" />; // Usando Navigate para redirecionar
+  }
+
   return (
-    <div className='wrapper'>
-      <form onSubmit={handleSubmit}>
-        <h1>Login</h1>
-        <div className='input-box'>
-          <input
-            type="text"
-            placeholder='Username'
-            value={username} // Controlar o valor com estado
-            onChange={(e) => setUsername(e.target.value)} // Atualizar o estado quando o usuário digitar
-            required
-          />
-          <FaUser className='icon' />
-        </div>
-        <div className='input-box'>
-          <input
-            type="password"
-            placeholder='Password'
-            value={password} // Controlar o valor com estado
-            onChange={(e) => setPassword(e.target.value)} // Atualizar o estado quando o usuário digitar
-            required
-          />
-          <FaLock className='icon' />
-        </div>
+    <body className='login'>
+      <div className='wrapper'>
+        <form onSubmit={handleSubmit}>
+          <h1>Login</h1>
+          <div className='input-box'>
+            <input
+              type="text"
+              placeholder='Username'
+              value={username} // Controlar o valor com estado
+              onChange={(e) => setUsername(e.target.value)} // Atualizar o estado quando o usuário digitar
+              required
+            />
+            <FaUser className='icon' />
+          </div>
+          <div className='input-box'>
+            <input
+              type="password"
+              placeholder='Password'
+              value={password} // Controlar o valor com estado
+              onChange={(e) => setPassword(e.target.value)} // Atualizar o estado quando o usuário digitar
+              required
+            />
+            <FaLock className='icon' />
+          </div>
 
-        <div className='remember-forgot'>
-          <label><input type="checkbox" />Remember Me</label>
-          <a href='#'>Esqueci Minha Senha</a>
-        </div>
+          <div className='remember-forgot'>
+            <label><input type="checkbox" />Remember Me</label>
+            <a href='#'>Esqueci Minha Senha</a>
+          </div>
 
-        <button type='submit'>Login</button>
+          <button type='submit'>Login</button>
 
-        <div className='register-link'>
-          <p>Não tem uma conta? <a href="#">Registre</a></p>
-        </div>
-      </form>
-    </div>
+          <div className='register-link'>
+            <p>Não tem uma conta? <a href="#">Registre</a></p>
+          </div>
+        </form>
+      </div>
+    </body>
   );
 };
 

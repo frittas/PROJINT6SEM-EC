@@ -8,6 +8,8 @@
     border-radius: 10px;
     padding: 30px 40px;
     box-sizing: border-box; /* Inclui padding no tamanho total */
+    box-shadow: 5px 4px 15px rgba(0, 0, 0, 0.1);
+    align-content: left;
 }
 
 /* ===== Cabeçalho ===== */

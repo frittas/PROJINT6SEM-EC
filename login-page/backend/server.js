@@ -6,6 +6,12 @@ const app = express();
 app.use(express.json());
 app.use(cors()); // Habilitar CORS
 
+const PORT = 3000; // Ou qualquer porta livre
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
+});
+
+
 // Conectar ao MySQL
 const db = mysql.createConnection({
   host: 'localhost',

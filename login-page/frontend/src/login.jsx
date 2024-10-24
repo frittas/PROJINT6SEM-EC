@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
 import './login.css';
+import React, { useState } from 'react';
 import { FaUser, FaLock } from "react-icons/fa";
 import { Navigate } from 'react-router-dom'; // Importar Navigate
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(''); // Variavel de Username
+  const [password, setPassword] = useState(''); // Variavel de Senha
   const [shouldRedirect, setShouldRedirect] = useState(false); // Estado para controle de redirecionamento
 
   const handleSubmit = async (e) => {
@@ -39,45 +39,64 @@ const Login = () => {
   }
 
   return (
-    <body className='login'>
-      <div className='wrapper'>
+    <body className="login">
+      <div className="wrapper"> {/*Container Principal da Pagina de Login*/}
         <form onSubmit={handleSubmit}>
-          <h1>Login</h1>
-          <div className='input-box'>
+
+          {/* Cabeçalho do sistema */}
+          <div className="form-header">
+            <img src="/RAMSLogo.ico" alt="Logo" className="logo-image" />
+            <div className="text-container">
+              <h1 className="logo-text">RAMS</h1>
+              <h2 className="subtitle">Risk Area Monitoring System</h2>
+            </div>
+          </div>
+
+          {/* Campo de Usuário */}
+          <div className="input-group">
             <input
               type="text"
-              placeholder='Username'
-              value={username} // Controlar o valor com estado
-              onChange={(e) => setUsername(e.target.value)} // Atualizar o estado quando o usuário digitar
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
-            <FaUser className='icon' />
+            <FaUser className="icon" />
           </div>
-          <div className='input-box'>
+  
+          {/* Campo de Senha */}
+          <div className="input-group">
             <input
               type="password"
-              placeholder='Password'
-              value={password} // Controlar o valor com estado
-              onChange={(e) => setPassword(e.target.value)} // Atualizar o estado quando o usuário digitar
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <FaLock className='icon' />
+            <FaLock className="icon" />
           </div>
-
-          <div className='remember-forgot'>
-            <label><input type="checkbox" />Remember Me</label>
-            <a href='#'>Esqueci Minha Senha</a>
+  
+          {/* Lembrete e link de senha esquecida */}
+          <div className="options">
+            <label>
+              <input type="checkbox" /> Lembrar-Me
+            </label>
+            <a href="#" className="forgot-password">Esqueci Minha Senha</a> {/*INSERIR LINK*/}
           </div>
-
-          <button type='submit'>Login</button>
-
-          <div className='register-link'>
-            <p>Não tem uma conta? <a href="#">Registre</a></p>
+  
+          {/* Botão de login */}
+          <button type="submit" className="btn-login">Login</button>
+  
+          {/* Link de registro */}
+          <div className="register-link">
+            <p>
+              Não tem uma conta? <a href="#">Clique Aqui!</a>
+            </p>
           </div>
         </form>
       </div>
     </body>
   );
-};
+}
 
 export default Login;

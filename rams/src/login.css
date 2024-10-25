@@ -1,96 +1,161 @@
+@import './variables.css';
+
+/* ===== Container Principal ===== */
 .wrapper {
     width: 420px;
-    background: rgba(0, 0, 0, 0.7);
+    background-color: #f2f2f2;
     color: #fff;
     border-radius: 10px;
     padding: 30px 40px;
-    box-sizing: border-box; /* Garantir que o padding seja incluído no tamanho total */
+    box-sizing: border-box; /* Inclui padding no tamanho total */
+    box-shadow: 5px 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* ===== Cabeçalho ===== */
 
-.wrapper h1 {
-    font-size: 36px;
-    text-align: center;
+/* Cabeçalho principal */
+.form-header {
+    display: flex;
+    align-items: center; /* Alinha logo e textos na mesma linha */
+    gap: 15px; /* Espaço entre o logo e o texto */
+    margin-bottom: 20px;
 }
 
-.wrapper .input-box {
+/* Estilo do logo */
+.logo-image {
+    width: 100px;
+    height: 100px;
+}
+
+/* Container dos textos */
+.text-container {
+    display: flex;
+    flex-direction: column; /* Empilha h1 e h2 verticalmente */
+    align-items: flex-start; /* Alinha os textos à esquerda */
+    gap: 0px; /* Espaçamento entre o título e subtítulo */
+    margin: 0px 0px 15px 0px;
+}
+
+/* Estilo do título (h1) */
+.logo-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 78px;
+    font-weight: 500;
+    color: #2f3336;
+    margin: 0; /* Remove margem padrão */
+}
+
+/* Estilo do subtítulo (h2) */
+.subtitle {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #000;
+    margin: -18px 0 0 4px; /* Remove margem padrão */
+}
+
+/* ===== Campos de Entrada ===== */
+.input-group {
     position: relative;
     width: 100%;
     height: 50px;
     margin: 30px 0;
-    box-sizing: border-box; /* Incluir padding e border no tamanho total */
+    box-sizing: border-box;
 }
 
-.input-box input {
+.input-group input {
     width: 100%;
     height: 100%;
-    background: transparent;
-    outline: none;
-    border: 2px solid rgba(255, 255, 255, .2);
-    border-radius: 40px;
+    background-color: var(--cinza-rams);
+    border: 2px solid var(--cinza-rams);
+    border-radius: 8px;
     font-size: 16px;
     color: #fff;
-    padding: 12px 45px 12px 20px; /* Reduzi o padding vertical */
-    box-sizing: border-box; /* Garantir que o padding não exceda o tamanho total */
+    padding: 12px 45px 12px 20px;
+    outline: none;
+    box-sizing: border-box;
 }
 
-.input-box input::placeholder {
-    color: #fff;
+.input-group input::placeholder {
+    color: #ffffff;
 }
 
-.input-box .icon {
+.input-group .icon {
     position: absolute;
-    right: 20px;
     top: 50%;
+    right: 20px;
     transform: translateY(-50%);
     font-size: 16px;
+    color: #ffffff;
 }
 
-.wrapper .remember-forgot {
+/* ===== Opções (Lembrar/Senha) ===== */
+.options {
     display: flex;
     justify-content: space-between;
     font-size: 14.5px;
     margin: -15px 0 15px;
 }
 
-.remember-forgot label input {
-    accent-color: #fff;
+.options label input {
     margin-right: 4px;
 }
 
-.remember-forgot a {
-    color: #fff;
+/*Texto Remember Me*/
+.options label {
+    color: #000;
+}
+
+/*Texto esqueci minha senha*/
+.options a {
+    color: var(--laranja-rams);
     text-decoration: none;
 }
 
-.remember-forgot a:hover {
+.options a:hover {
     text-decoration: underline;
 }
 
+/* ===== Botão de Login ===== */
 .wrapper button {
     width: 100%;
     height: 45px;
-    background: #fff;
+    background-color: var(--amarelo-forte-rams);
     border: none;
-    outline: none;
     border-radius: 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     font-size: 16px;
-    color: #333;
     font-weight: 700;
+    color: #333;
+    cursor: pointer;
+    outline: none;
 }
 
-;.wrapper .register-link {
+.wrapper button:hover {
+    background-color: #f0f0f0;
+}
+
+/* ===== Link de Registro ===== */
+.register-link {
+    display: flex;
+    justify-content: center;
     font-size: 14.5px;
-    text-align: center;
     margin-top: 20px;
+    text-align: center;
+}
+
+.register-link p {
+    margin: 30px 0 0 10px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #2f3336;
 }
 
 .register-link p a {
-    color: #fff;
-    text-decoration: none;
     font-weight: 600;
+    color: var(--laranja-rams);
+    text-decoration: none;
 }
 
 .register-link p a:hover {

@@ -1,13 +1,12 @@
-import React from 'react';
-import './dashboard.css';
+import Map from './map';
 
-const Dashboard = () => {
+function App() {
   return (
     <div>
-      <h5>Bem-vindo ao Dashboaaaaaaaaaaard!</h5>
-      <p2>Esta é a página principal do seu painel após o login.</p2>
+      <h3>Meu Mapa Google Maps</h3>
+      <Map />
     </div>
   );
-};
+}
 
-export default Dashboard;
+export default App;

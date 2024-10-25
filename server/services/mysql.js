@@ -1,6 +1,0 @@
-//CRUD
-
-//CREATE
-//REQUEST
-//UPDATE
-//DELETE

@@ -1,0 +1,36 @@
+/* dashboard.css */
+
+.dashboard {
+    height: 80vh; /* Set height for the dashboard */
+  }
+  
+  .header {
+    display: flex; /* Use flexbox for header layout */
+    align-items: center; /* Center items vertically */
+    height: 60px; /* Set a fixed height for the header */
+    background-color: var(--laranja-rams); /* Header background color */
+    padding: 0 20px; /* Horizontal padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    width: 100%;
+  }
+  
+  .barras {
+    font-size: 30px; /* Icon size */
+    margin-right: 15px; /* Space between icon and title */
+    cursor: pointer; /* Change cursor on hover */
+  }
+  
+  .header-title {
+    font-size: 24px; /* Size of the header title */
+    color: white; /* Title color */
+    margin: 0; /* Remove default margin */
+  }
+  
+  .mapa {
+    margin: 2% 15%; /* Margin around the map */
+    align-self: center; /* Center alignment */
+    width: 75%; /* Width of the map */
+    height: calc(80vh - 60px); /* Height = total dashboard height - header height */
+  }
+
+  

@@ -24,7 +24,7 @@ const Map = () => {
     // Verifica se a API do Google Maps já foi carregada
     if (!window.google) {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDsh984La5bxldiAnizRix0Eul-6b1Bh5E&callback=initMap`;
+      script.src = ``;
       script.async = true;
       script.defer = true;
       script.onload = initMap; // Inicializa o mapa ao carregar o script
@@ -34,7 +34,7 @@ const Map = () => {
     }
   }, []);
 
-  return <div ref={mapRef} style={{ height: '100vh', width: '100%' }} />;
+  return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
 
 export default Map;

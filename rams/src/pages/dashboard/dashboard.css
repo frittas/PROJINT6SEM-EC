@@ -1,0 +1,159 @@
+.dashboard {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header styling */
+.header {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  height: 7vh; /* Keep this height */
+  background-color: var(--laranja-rams);
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
+.barras {
+  font-size: 30px;
+  margin-right: 15px;
+  cursor: pointer;
+  color: white;
+}
+
+.usuario {
+  margin-left: auto;
+  margin-right: 42px; 
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
+
+.header-title {
+  font-size: 24px;
+  color: white;
+  margin: 0;
+}
+
+/* Sidebar styling */
+.sidebar {
+  position: fixed;
+  top: 7vh; /* Aligns with header height */
+  left: -300px; /* Hidden off-screen */
+  width: 250px;
+  height: calc(100vh - 7vh); /* Total height minus header height */
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: left 0.3s ease; /* Smooth slide-in effect */
+}
+
+/* Sidebar button styling */
+.sidebarButtons {
+  flex: 1; /* Take up remaining space */
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  position: relative; /* Set position for absolute positioning */
+}
+
+/* Absolute positioning for the "Sair" button */
+.sidebarSair {
+  position: absolute; /* Make the button absolute */
+  bottom: 20px; /* Move to bottom with a 20px margin */
+  left: 0; /* Align to the left */
+  right: 0; /* Align to the right */
+  padding: 10px;
+  background-color: #ff6347; /* Tomato color */
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+/* Sidebar open state */
+.sidebar.open {
+  left: 0; /* Slide in when open */
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+}
+
+/* Map section */
+.mapa {
+  margin-top: 6%;
+  margin-left: 0; /* Set initial margin-left to 0 */
+  margin-bottom: 0%;
+  align-self: center;
+  width: 75%;
+  height: calc(80vh - 9vh); /* Adjust the height to fill the available space */
+  transition: margin-left 0.3s ease; /* Add transition for margin-left */
+}
+
+.buttonSendAlert {
+  width: 100%;
+  height: 45px;
+  background-color: var(--amarelo-forte-rams);
+  border: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+}
+
+.buttonSendAlert:hover {
+  background-color: #f0f0f0;
+}
+
+.optionsDashboard {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-bar {
+  position: absolute; /* Posiciona-a absolutamente */
+  top: 7.4vh; /* Posição abaixo do cabeçalho */
+  left: 22.3%; /* Centraliza horizontalmente */
+  transform: translateX(-50%); /* Centraliza o elemento */
+  z-index: 100; /* Certifique-se de que está acima do mapa */
+  width: 20%; /* Define a largura da barra de pesquisa */
+  border-radius: 20px; /* Bordas arredondadas */
+  /*box-shadow: 10px 2.5px 10px 2px rgba(0, 0, 0, 0.5); /* Adiciona sombra */
+  display: flex; /* Usar flexbox para alinhar o ícone e o input */
+  align-items: center; /* Alinha verticalmente */
+  padding: 0 10px; /* Adiciona padding para os lados */
+  transition: margin-left 0.3s ease;
+}
+
+.search-input-container {
+  display: flex; /* Usar flexbox para o container */
+  align-items: center; /* Alinha verticalmente */
+  width: 100%; /* Largura total */
+}
+
+.search-input-container .searchIcon {
+  margin-right: 10px; /* Espaçamento entre o ícone e o input */
+  color: #aaa; /* Cor do ícone, ajuste conforme necessário */
+}
+
+.search-bar input {
+  flex: 1; /* O input ocupa o espaço restante */
+  padding: 10px; /* Adiciona padding */
+  border-radius: 20px; /* Bordas arredondadas */
+  border: 1px solid #ccc; /* Cor da borda */
+}
+
+.search-bar input::placeholder {
+  color: #aaa; /* Cor do placeholder */
+}

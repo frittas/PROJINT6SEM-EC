@@ -4,7 +4,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { Navigate } from 'react-router-dom'; // Importar Navigate
 
 const Login = () => {
-  const [username, setUsername] = useState(''); // Variavel de Username
+  const [email, setEmail] = useState(''); // Variavel de Username
   const [password, setPassword] = useState(''); // Variavel de Senha
   const [shouldRedirect, setShouldRedirect] = useState(false); // Estado para controle de redirecionamento
 
@@ -18,7 +18,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }), // Enviar os dados do formulário como JSON
+        body: JSON.stringify({ email, password }), // Enviar os dados do formulário como JSON
       });
 
       const data = await response.json();
@@ -57,8 +57,8 @@ const Login = () => {
             <input
               type="text"
               placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
             <FaUser className="icon" />

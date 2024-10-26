@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require('cors');
 const { initializeApp } = require("firebase/app");
 const {
   getAuth,
@@ -16,6 +17,7 @@ const {
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // Configuração Firebase
 const firebaseConfig = {

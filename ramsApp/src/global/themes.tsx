@@ -5,6 +5,6 @@ export const themes = {
     heather: "#C5CED9",
     bgScreen: "#F2F2F2",
     gray: "#857D86",
-    text: "#0D0D0D",
+    text: "#2F3336",
   },
 };

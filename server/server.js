@@ -1,55 +1,50 @@
+require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors'); // Adicione o cors
+const { initializeApp } = require("firebase/app");
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = require("firebase/auth");
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // Habilitar CORS
 
-const PORT = 3000; // Ou qualquer porta livre
+// Configuração Firebase
+const firebaseConfig = {
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID
+};
+
+// Inicializacao do Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+
+// Rota de Cadastro
+app.post('/cadastro', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        res.status(201).json({ message: "Usuario cadastrado!", user: userCredential.user });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Rota de Login
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        res.status(200).json({ message: "Login realizado", user: userCredential.user });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Iniciar Servidor
+const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Servidor rodando => http://localhost:${PORT}`);
 });
-
-
-// Conectar ao MySQL
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'user1232024', //Colocar a senha do seu MySQL
-  database: 'projbase' //Nome do Schema para teste
-});
-
-// Conectar ao MySQL
-db.connect((err) => {
-  if (err) throw err;
-  console.log('Conectado ao MySQL!');
-});
-
-// Rota de login
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    // Verifica se username e password foram enviados
-    return res.status(400).json({ message: 'Por favor, forneça username e password' });
-  }
-
-  const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
-  db.query(query, [username, password], (err, results) => {
-    if (err) {
-      console.error('Erro na consulta ao MySQL:', err);
-      return res.status(500).json({ message: 'Erro interno no servidor' });
-    }
-
-    if (results.length > 0) {
-      // Usuário encontrado
-      return res.status(200).json({ message: 'Login bem-sucedido' });
-      
-    } else {
-      // Usuário não encontrado
-      return res.status(401).json({ message: 'Usuário ou senha incorretos' });
-    }
-  });
-});
-
-//https://medium.com/the-node-js-collection/making-your-node-js-work-everywhere-with-environment-variables-2da8cdf6e786 - VARIAVEL DE AMBIENTE

@@ -7,7 +7,7 @@ export const style = StyleSheet.create({
     justifyContent: "center",
   },
   header: {
-    height: Dimensions.get("window").height / 5,
+    height: Dimensions.get("window").height / 10,
 
     width: "100%",
     alignItems: "center",
@@ -19,36 +19,27 @@ export const style = StyleSheet.create({
     paddingHorizontal: 35,
   },
   footer: {
-    height: Dimensions.get("window").height / 8,
+    height: Dimensions.get("window").height / 3.5,
     width: "100%",
     paddingHorizontal: 35,
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
   logoContainer: {
-    alignItems: "flex-end",
+    alignItems: "center",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     marginBottom: 55,
   },
   logo: {
-    width: 95,
-    height: 95,
+    width: 65,
+    height: 65,
   },
   textLogoBig: {
     fontWeight: "bold",
     fontFamily: "Roboto",
-    fontSize: 78,
+    fontSize: 64,
     color: themes.colors.text,
-  },
-  textLogoSmall: {
-    fontWeight: "bold",
-    fontFamily: "Roboto",
-    fontSize: 16,
-    color: themes.colors.text,
-    position: "absolute",
-    bottom: 0,
-    left: 5,
   },
   button: {
     paddingTop: 40,
@@ -66,8 +57,15 @@ export const style = StyleSheet.create({
     color: themes.colors.primary,
   },
   infoContainer: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
     flexDirection: "row",
   },
+  createAccountText: {
+    fontSize: 20,
+    // fontWeight: "bold",
+    textAlign: "center",
+    color: themes.colors.gray,
+    fontFamily: 'Roboto'
+  }
 });

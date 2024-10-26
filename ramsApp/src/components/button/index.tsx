@@ -1,13 +1,14 @@
 import React from "react";
 import { Text, StyleSheet, Pressable } from "react-native";
 import { themes } from "../../global/themes";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Button(props: any) {
   const { onPress, title = "Save" } = props;
   return (
-    <Pressable style={style.button} onPress={onPress}>
+    <TouchableOpacity style={style.button} onPress={onPress}>
       <Text style={style.text}>{title}</Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
@@ -19,6 +20,8 @@ const style = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 30,
     backgroundColor: themes.colors.secondary,
+    height: 55,
+    elevation: 2
   },
   text: {
     fontSize: 20,

@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const cors = require('cors');
+const cors = require("cors");
 const { initializeApp } = require("firebase/app");
 const {
   getAuth,
@@ -75,11 +75,9 @@ app.post("/locations", async (req, res) => {
 
   // Validar entrada
   if (!uid || !title || !latitude || !longitude) {
-    return res
-      .status(400)
-      .json({
-        message: "Insira todos os valores!",
-      });
+    return res.status(400).json({
+      message: "Insira todos os valores!",
+    });
   }
 
   try {
@@ -94,12 +92,10 @@ app.post("/locations", async (req, res) => {
       createdAt: new Date(), // Adiciona a data de criação
     });
 
-    res
-      .status(201)
-      .json({
-        message: "Location added successfully",
-        locationId: newLocationRef.id,
-      });
+    res.status(201).json({
+      message: "Localização adicionada",
+      locationId: newLocationRef.id,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

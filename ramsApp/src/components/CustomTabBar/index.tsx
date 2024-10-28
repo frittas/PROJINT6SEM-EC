@@ -13,21 +13,22 @@ import { AuthContextList } from "../../context/authContext_list";
 import { FontAwesome } from "@expo/vector-icons";
 
 export default ({ state, navigation }: any) => {
-  const { onOpen } = useContext<any>(AuthContextList);
+  const { onOpenNewLocation, onOpenLogout, onOpenList } =
+    useContext<any>(AuthContextList);
   return (
     <View style={style.tabArea}>
-      <TouchableOpacity style={style.tabItem}>
+      <TouchableOpacity style={style.tabItem} onPress={onOpenLogout}>
         <FontAwesome style={style.icon} name="bars" size={30} />
       </TouchableOpacity>
       <TouchableHighlight
         underlayColor="#F2DC6D"
-        onPress={onOpen}
+        onPress={onOpenNewLocation}
         style={style.tabItemRound}
       >
         <FontAwesome style={style.iconPlus} name="plus" size={40} />
       </TouchableHighlight>
-      <TouchableOpacity style={style.tabItem}>
-        <FontAwesome style={style.icon} name="user" size={30} />
+      <TouchableOpacity style={style.tabItem} onPress={onOpenList}>
+        <FontAwesome style={style.icon} name="location-arrow" size={35} />
       </TouchableOpacity>
     </View>
   );

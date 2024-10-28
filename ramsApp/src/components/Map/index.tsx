@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { View, Image, TextInput, Text } from "react-native";
 import MapView, { LatLng, MapPressEvent, Marker } from "react-native-maps";
 import {
@@ -11,9 +11,18 @@ import {
 import { style } from "./styles";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import SearchBox from "../searchbox";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  collectionGroup,
+} from "firebase/firestore";
+import { db } from "../../services/config";
+import { AuthContextList } from "../../context/authContext_list";
 
 export default function Map() {
-  const [location, setLocation] = useState<LatLng | null>(null);
+  const { selectedLocation, setSelectedLocation } =
+    useContext<any>(AuthContextList);
 
   const mapRef = useRef<MapView>(null);
 
@@ -21,7 +30,7 @@ export default function Map() {
     const { granted } = await requestForegroundPermissionsAsync();
     if (granted) {
       const currentPosition = await getCurrentPositionAsync();
-      setLocation({
+      setSelectedLocation({
         latitude: currentPosition.coords.latitude,
         longitude: currentPosition.coords.longitude,
       });
@@ -35,29 +44,25 @@ export default function Map() {
   useEffect(() => {
     mapRef.current?.animateCamera({
       pitch: 70,
-      center: location!,
+      center: selectedLocation!,
     });
-    // watchPositionAsync(
-    //   {
-    //     accuracy: LocationAccuracy.Highest,
-    //     timeInterval: 1000,
-    //     distanceInterval: 1,
-    //   },
-    //   (response) => {
-    //     setLocation({
-    //       latitude: response.coords.latitude,
-    //       longitude: response.coords.longitude,
-    //     });
-    //     mapRef.current?.animateCamera({
-    //       pitch: 70,
-    //       center: response.coords,
-    //     });
-    //   }
-    // );
+    watchPositionAsync(
+      {
+        accuracy: LocationAccuracy.Highest,
+        timeInterval: 1000,
+        distanceInterval: 1,
+      },
+      (response) => {
+        mapRef.current?.animateCamera({
+          pitch: 70,
+          center: response.coords,
+        });
+      }
+    );
   }, []);
 
   const handlePress = (e: MapPressEvent) => {
-    setLocation(e.nativeEvent.coordinate);
+    setSelectedLocation(e.nativeEvent.coordinate);
     mapRef.current?.animateCamera({
       pitch: 70,
       center: e.nativeEvent.coordinate,
@@ -66,22 +71,22 @@ export default function Map() {
 
   return (
     <View style={style.container}>
-      {location && (
+      {selectedLocation && (
         <MapView
           onPress={handlePress}
           ref={mapRef}
           style={style.map}
           initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: selectedLocation.latitude,
+            longitude: selectedLocation.longitude,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }}
         >
           <Marker
             coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
+              latitude: selectedLocation.latitude,
+              longitude: selectedLocation.longitude,
             }}
           >
             <Image

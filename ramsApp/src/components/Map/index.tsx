@@ -32,25 +32,29 @@ export default function Map() {
     requestLocationPermission();
   }, []);
 
-  // useEffect(() => {
-  //   watchPositionAsync(
-  //     {
-  //       accuracy: LocationAccuracy.Highest,
-  //       timeInterval: 1000,
-  //       distanceInterval: 1,
-  //     },
-  //     (response) => {
-  //       setLocation({
-  //         latitude: response.coords.latitude,
-  //         longitude: response.coords.longitude,
-  //       });
-  //       mapRef.current?.animateCamera({
-  //         pitch: 70,
-  //         center: response.coords,
-  //       });
-  //     }
-  //   );
-  // }, []);
+  useEffect(() => {
+    mapRef.current?.animateCamera({
+      pitch: 70,
+      center: location!,
+    });
+    // watchPositionAsync(
+    //   {
+    //     accuracy: LocationAccuracy.Highest,
+    //     timeInterval: 1000,
+    //     distanceInterval: 1,
+    //   },
+    //   (response) => {
+    //     setLocation({
+    //       latitude: response.coords.latitude,
+    //       longitude: response.coords.longitude,
+    //     });
+    //     mapRef.current?.animateCamera({
+    //       pitch: 70,
+    //       center: response.coords,
+    //     });
+    //   }
+    // );
+  }, []);
 
   const handlePress = (e: MapPressEvent) => {
     setLocation(e.nativeEvent.coordinate);

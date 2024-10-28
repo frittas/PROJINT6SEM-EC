@@ -6,5 +6,6 @@ export const themes = {
     bgScreen: "#F2F2F2",
     gray: "#857D86",
     text: "#2F3336",
+    white: "#F2F2F2"
   },
 };

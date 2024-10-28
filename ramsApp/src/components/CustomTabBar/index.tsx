@@ -7,27 +7,27 @@ import {
   Dimensions,
 } from "react-native";
 import { themes } from "../../global/themes";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBars, faPlus, faUser } from "@fortawesome/free-solid-svg-icons";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { AuthContextList } from "../../context/authContext_list";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default ({ state, navigation }: any) => {
   const { onOpen } = useContext<any>(AuthContextList);
   return (
     <View style={style.tabArea}>
       <TouchableOpacity style={style.tabItem}>
-        <FontAwesomeIcon style={style.icon} icon={faBars} size={30} />
+        <FontAwesome style={style.icon} name="bars" size={30} />
       </TouchableOpacity>
       <TouchableHighlight
         underlayColor="#F2DC6D"
         onPress={onOpen}
         style={style.tabItemRound}
       >
-        <FontAwesomeIcon style={style.iconPlus} icon={faPlus} size={40} />
+        <FontAwesome style={style.iconPlus} name="plus" size={40} />
       </TouchableHighlight>
       <TouchableOpacity style={style.tabItem}>
-        <FontAwesomeIcon style={style.icon} icon={faUser} size={30} />
+        <FontAwesome style={style.icon} name="user" size={30} />
       </TouchableOpacity>
     </View>
   );

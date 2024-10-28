@@ -1,18 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View, Image, Alert, Pressable } from "react-native";
 
 import { style } from "./styles";
 import logo from "../../assets/LogoRams.png";
-import { AnimatedInputField } from "../../components/AnimatedInputField";
+import { CustomInput } from "../../components/AnimatedInputField";
 import Button from "../../components/Button";
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<any>>();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const auth = getAuth();
+
   async function getLogin() {
-    navigation.navigate("BottomRoutes");
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      navigation.navigate("BottomRoutes");
+    } catch (error: any) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    }
   }
 
   async function getSignup() {
@@ -31,12 +47,19 @@ export default function Login() {
             <Text style={style.textLogoSmall}>Risk Area Monitoring System</Text>
           </View>
         </View>
-        <AnimatedInputField icon={faUser} title="Usuário"></AnimatedInputField>
-        <AnimatedInputField
-          icon={faLock}
-          title="Senha"
-          secure={true}
-        ></AnimatedInputField>
+        <CustomInput
+          icon="envelope"
+          placeholder="Usuário"
+          value={email}
+          onChangeText={setEmail}
+        ></CustomInput>
+        <CustomInput
+          icon="lock"
+          placeholder="Senha"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        ></CustomInput>
         <View style={style.button}>
           <Button title="Login" onPress={getLogin}></Button>
         </View>

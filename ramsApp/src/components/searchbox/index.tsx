@@ -1,82 +1,95 @@
 import React, { useRef, useState } from "react";
 
-import { Text, StyleSheet, TextInput, View, Animated } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  TextInput,
+  View,
+  Animated,
+  Dimensions,
+} from "react-native";
 import { themes } from "../../global/themes";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { FontAwesome } from "@expo/vector-icons";
+
+import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export default function SearchBox(props: any) {
   const { onPress } = props;
   const [searchText, setSearchText] = useState("");
+
+  const inputRef = useRef<TextInput>(null);
 
   const expandAnimation = useRef(new Animated.Value(0)).current;
 
   const handleFocus = () => {
     Animated.timing(expandAnimation, {
       toValue: 1,
-      duration: 150,
+      duration: 200,
       useNativeDriver: false,
     }).start();
   };
+
   const handleBlur = () => {
+    // inputRef.current?.blur();
     if (!searchText) {
       Animated.timing(expandAnimation, {
         toValue: 0,
-        duration: 150,
+        duration: 200,
         useNativeDriver: false,
       }).start();
     }
   };
 
-  const floatingLabelStyle = {
-    top: expandAnimation.interpolate({
+  const focus = () => {
+    inputRef.current?.focus();
+  };
+
+  const blur = () => {
+    inputRef.current?.blur();
+  };
+
+  const expandableSearchStyle = {
+    width: expandAnimation.interpolate({
       inputRange: [0, 1],
-      outputRange: [10, -20],
-    }),
-    left: expandAnimation.interpolate({
-      inputRange: [0, 1],
-      outputRange: [10, -20],
-    }),
-    fontSize: expandAnimation.interpolate({
-      inputRange: [0, 1],
-      outputRange: [12, 16],
+      outputRange: [40, Dimensions.get("screen").width - 40],
     }),
   };
 
   return (
-    <View style={style.searchBox}>
-      <Animated.Text style={[style.searchBoxField, floatingLabelStyle]}>
-        Procurar lugares
-      </Animated.Text>
-      {/* <Text style={style.searchBoxField}>Procurar lugares</Text> */}
-      <TextInput onFocus={handleFocus} onBlur={handleBlur} />
-      <TouchableOpacity style={style.buttonContainer}>
-        <Text style={style.buttonLabel}>Procurar</Text>
+    <Animated.View style={[style.searchBox, expandableSearchStyle]}>
+      <TouchableOpacity style={style.iconContainer} onPress={focus}>
+        <FontAwesome name="search" color={themes.colors.gray} size={20}></FontAwesome>
       </TouchableOpacity>
-    </View>
+      <TextInput ref={inputRef} onBlur={handleBlur} onFocus={handleFocus} />
+      {/* <TouchableOpacity style={style.iconContainer} onPress={blur}>
+        <FontAwesome
+          icon={faClose}
+          color={themes.colors.gray}
+        ></FontAwesome>
+      </TouchableOpacity> */}
+    </Animated.View>
   );
 }
 
 const style = StyleSheet.create({
   searchBox: {
+    flex: 1,
     position: "absolute",
-    width: "90%",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#fff",
-    backgroundColor: themes.colors.bgScreen,
-    padding: 8,
-    alignSelf: "center",
+    borderRadius: 100,
+    backgroundColor: themes.colors.white,
     top: 60,
+    left: 20,
+    flexDirection: "row",
+    elevation: 10,
+    paddingVertical: 0,
+    paddingHorizontal: 5,
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
-  searchBoxField: {
-    borderColor: "#777",
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    fontSize: 18,
-    marginBottom: 8,
+  iconContainer: {
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
   },
-  buttonContainer: {},
-  buttonLabel: {},
 });

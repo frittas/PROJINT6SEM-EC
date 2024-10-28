@@ -2,10 +2,9 @@ import { faUser, faLock, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import logo from "../../assets/LogoRams.png";
 import { Pressable, Text, View, Image } from "react-native";
-import { AnimatedInputField } from "../../components/AnimatedInputField";
+import { CustomInput } from "../../components/AnimatedInputField";
 import { style } from "./styles";
 import Button from "../../components/Button";
-
 
 export default function Signup() {
   return (
@@ -19,21 +18,18 @@ export default function Signup() {
           </View>
         </View>
         <Text style={style.createAccountText}>Crie sua conta!</Text>
-        <AnimatedInputField icon={faUser} title="Usuário"></AnimatedInputField>
-        <AnimatedInputField
-          icon={faEnvelope}
-          title="Email"
-        ></AnimatedInputField>
-        <AnimatedInputField
-          icon={faLock}
-          title="Senha"
-          secure={true}
-        ></AnimatedInputField>
-        <AnimatedInputField
-          icon={faLock}
-          title="Confirmar Senha"
-          secure={true}
-        ></AnimatedInputField>
+        {/* <CustomInput icon="user" placeholder="Usuário"></CustomInput> */}
+        <CustomInput icon="envelope" placeholder="Email"></CustomInput>
+        <CustomInput
+          icon="lock"
+          placeholder="Senha"
+          secureTextEntry={true}
+        ></CustomInput>
+        <CustomInput
+          icon="lock"
+          placeholder="Confirmar Senha"
+          secureTextEntry={true}
+        ></CustomInput>
         <View style={style.button}>
           <Button title="Cadastre-se"></Button>
         </View>

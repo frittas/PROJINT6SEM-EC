@@ -1,33 +1,43 @@
 import React, { useState } from "react";
-import { Text, View, Image, Alert, Pressable } from "react-native";
-
+import {
+  Text,
+  View,
+  Image,
+  Alert,
+  Pressable,
+  KeyboardAvoidingView,
+} from "react-native";
 import { style } from "./styles";
 import logo from "../../assets/LogoRams.png";
 import { CustomInput } from "../../components/AnimatedInputField";
 import Button from "../../components/Button";
-import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signIn } from "../../services/authService";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<any>>();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const auth = getAuth();
 
   async function getLogin() {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
+      const user = await signIn(email, password);
       navigation.navigate("BottomRoutes");
     } catch (error: any) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
+      if (
+        error.code == "auth/user-not-found" ||
+        error.code == "auth/wrong-password" ||
+        error.code == "auth/invalid-credential"
+      ) {
+        Alert.alert("Usuário Inválido");
+      } else if (error.code == "auth/too-many-requests") {
+        Alert.alert(
+          "Muitas tentativas inválidas, tente de novo em alguns instantes"
+        );
+      } else {
+        Alert.alert("Erro no Login " + error.message);
+      }
     }
   }
 
@@ -47,19 +57,21 @@ export default function Login() {
             <Text style={style.textLogoSmall}>Risk Area Monitoring System</Text>
           </View>
         </View>
-        <CustomInput
-          icon="envelope"
-          placeholder="Usuário"
-          value={email}
-          onChangeText={setEmail}
-        ></CustomInput>
-        <CustomInput
-          icon="lock"
-          placeholder="Senha"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={setPassword}
-        ></CustomInput>
+        <KeyboardAvoidingView behavior="padding">
+          <CustomInput
+            icon="envelope"
+            placeholder="Usuário"
+            value={email}
+            onChangeText={setEmail}
+          ></CustomInput>
+          <CustomInput
+            icon="lock"
+            placeholder="Senha"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+          ></CustomInput>
+        </KeyboardAvoidingView>
         <View style={style.button}>
           <Button title="Login" onPress={getLogin}></Button>
         </View>

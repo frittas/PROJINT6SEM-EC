@@ -34,10 +34,6 @@ export const AuthProviderList = (props: any): any => {
     );
   };
 
-  const modalList = () => {
-    return <View style={style.container}></View>;
-  };
-
   return (
     <AuthContextList.Provider value={{ onOpen, onClose }}>
       {props.children}

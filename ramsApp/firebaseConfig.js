@@ -1,6 +1,5 @@
-import firebase from '@react-native-firebase/app';
 import { initializeApp } from 'firebase/app';
-import getAuth from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 // Optionally import the services that you want to use
 // import {...} from "firebase/database";
@@ -20,14 +19,7 @@ const firebaseConfig = {
     measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-let app;
-if (firebase.apps.length === 0) {
-    app = firebase.initializeApp(RNfirebaseConfig)
-} else {
-    app = firebase.app()
-}
-
-// const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
 // Initialize Firebase Authentication and get a reference to the service

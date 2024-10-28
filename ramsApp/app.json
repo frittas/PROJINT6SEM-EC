@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ramsApp",
-    "slug": "ramsApp",
+    "slug": "ramsapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,12 @@
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
       "@react-native-firebase/crashlytics"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "8b90e57b-580e-498e-bfa2-68b583380c19"
+      }
+    },
+    "owner": "frittas"
   }
 }

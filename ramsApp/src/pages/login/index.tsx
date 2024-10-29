@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -13,6 +13,8 @@ import { CustomInput } from "../../components/AnimatedInputField";
 import Button from "../../components/Button";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { signIn } from "../../services/authService";
+import { User } from "firebase/auth";
+import { auth } from "../../services/config";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -20,15 +22,24 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function getLogin() {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.navigate("BottomRoutes");
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  async function handleLogin() {
     try {
-      const user = await signIn(email, password);
+      await signIn(email, password);
       navigation.navigate("BottomRoutes");
     } catch (error: any) {
       if (
         error.code == "auth/user-not-found" ||
         error.code == "auth/wrong-password" ||
-        error.code == "auth/invalid-credential"
+        error.code == "auth/invalid-email"
       ) {
         Alert.alert("Usuário Inválido");
       } else if (error.code == "auth/too-many-requests") {
@@ -60,7 +71,7 @@ export default function Login() {
         <KeyboardAvoidingView behavior="padding">
           <CustomInput
             icon="envelope"
-            placeholder="Usuário"
+            placeholder="Email"
             value={email}
             onChangeText={setEmail}
           ></CustomInput>
@@ -73,7 +84,7 @@ export default function Login() {
           ></CustomInput>
         </KeyboardAvoidingView>
         <View style={style.button}>
-          <Button title="Login" onPress={getLogin}></Button>
+          <Button title="Login" onPress={handleLogin}></Button>
         </View>
       </View>
       <View style={style.footer}>

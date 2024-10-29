@@ -1,41 +1,31 @@
 import './login.css';
 import React, { useState } from 'react';
 import { FaUser, FaLock } from "react-icons/fa";
-import { Navigate } from 'react-router-dom'; // Importar Navigate
+import { Navigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from './firebaseConfig'; // Importar Firebase Auth
 
 const Login = () => {
-  const [email, setEmail] = useState(''); // Variavel de Username
-  const [password, setPassword] = useState(''); // Variavel de Senha
-  const [shouldRedirect, setShouldRedirect] = useState(false); // Estado para controle de redirecionamento
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevenir o comportamento padrão de recarregar a página
+    e.preventDefault();
 
-    // Enviar os dados para o backend
     try {
-      const response = await fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }), // Enviar os dados do formulário como JSON
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        // Define o estado para redirecionar
-        setShouldRedirect(true);
-      } else {
-        alert('Erro: ' + data.message);
-      }
+      // Login com Firebase
+      await signInWithEmailAndPassword(auth, email, password);
+      setShouldRedirect(true); // Redireciona para o dashboard se o login for bem-sucedido
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
+      console.error('Erro ao fazer login:', error);
+      setErrorMessage('Falha ao autenticar. Verifique seu email e senha.');
     }
   };
 
-  // Verifica se deve redirecionar
   if (shouldRedirect) {
-    return <Navigate to="/dashboard" />; // Usando Navigate para redirecionar
+    return <Navigate to="/dashboard" />;
   }
 
   return (

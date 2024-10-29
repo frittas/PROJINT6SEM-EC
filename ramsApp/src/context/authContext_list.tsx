@@ -1,4 +1,3 @@
-import { faCheck, faClose, faHome } from "@fortawesome/free-solid-svg-icons";
 import React, { createContext, useContext, useRef, useState } from "react";
 import {
   Text,
@@ -13,7 +12,7 @@ import { Modalize } from "react-native-modalize";
 import { CustomInput } from "../components/AnimatedInputField";
 import Button from "../components/Button";
 import { themes } from "../global/themes";
-import { LatLng } from "react-native-maps";
+import MapView, { LatLng, MapPressEvent } from "react-native-maps";
 import { addLocation, getUserLocations } from "../services/dbService";
 import { auth } from "../services/config";
 import { signOut } from "../services/authService";
@@ -30,8 +29,20 @@ export const AuthProviderList = (props: any): any => {
 
   const [selectedLocation, setSelectedLocation] = useState<LatLng | null>(null);
   const [newLocationName, setnewLocationName] = useState("");
+  const [mapRef, setMapRef] = useState<React.RefObject<MapView> | null>(null);
+
   const [locationList, setLocationList] = useState([]);
+  const [pushTokenString, setPushTokenString] = useState([]);
+
   const navigation = useNavigation<NavigationProp<any>>();
+
+  const onMapPress = (e: any) => {
+    setSelectedLocation(e.nativeEvent.coordinate);
+    mapRef?.current?.animateCamera({
+      pitch: 70,
+      center: e.nativeEvent.coordinate,
+    });
+  };
 
   const onOpenNewLocation = () => {
     setnewLocationName("");
@@ -113,10 +124,14 @@ export const AuthProviderList = (props: any): any => {
               //   <FontAwesome size={20} name="close"></FontAwesome>
               // </TouchableOpacity>
               <Swipeable key={index} renderRightActions={renderRightActions}>
-                <View style={style.row}>
+                <TouchableOpacity style={style.row}>
                   <Text style={style.rowText}>{location.title}</Text>
-                  <FontAwesome name="chevron-right" size={20}></FontAwesome>
-                </View>
+                  <FontAwesome
+                    style={style.iconLeft}
+                    name="chevron-right"
+                    size={20}
+                  ></FontAwesome>
+                </TouchableOpacity>
               </Swipeable>
             );
           })}
@@ -162,6 +177,9 @@ export const AuthProviderList = (props: any): any => {
         onCloseList,
         selectedLocation,
         setSelectedLocation,
+        onMapPress,
+        setMapRef,
+        pushTokenString,
       }}
     >
       {props.children}
@@ -183,6 +201,7 @@ export const AuthProviderList = (props: any): any => {
         ref={modalizeList}
         childrenStyle={{ height: Dimensions.get("window").height / 2 }}
         adjustToContentHeight={true}
+        onClosed={onCloseList}
       >
         {modalList()}
       </Modalize>
@@ -263,5 +282,8 @@ export const style = StyleSheet.create({
     color: "#fcfcfc",
     fontWeight: "bold",
     padding: 3,
+  },
+  iconLeft: {
+    paddingRight: 20,
   },
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -15,9 +15,11 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { signIn } from "../../services/authService";
 import { User } from "firebase/auth";
 import { auth } from "../../services/config";
+import { LoadingContext } from "../../context/loaderContext";
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<any>>();
+  const { loading, setLoading } = useContext<any>(LoadingContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +27,7 @@ export default function Login() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
+        setLoading(false);
         navigation.navigate("BottomRoutes");
       }
     });
@@ -33,7 +36,9 @@ export default function Login() {
 
   async function handleLogin() {
     try {
+      setLoading(true);
       await signIn(email, password);
+      setLoading(false);
       navigation.navigate("BottomRoutes");
     } catch (error: any) {
       if (

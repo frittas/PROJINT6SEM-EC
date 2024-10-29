@@ -1,32 +1,20 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
-import { View, Image, TextInput, Text } from "react-native";
+import React, { useEffect, useRef, useContext } from "react";
+import { View } from "react-native";
 import MapView, {
-  LatLng,
   MapPressEvent,
   Marker,
   PROVIDER_GOOGLE,
 } from "react-native-maps";
 import {
   getCurrentPositionAsync,
-  LocationAccuracy,
-  LocationObject,
   requestForegroundPermissionsAsync,
-  watchPositionAsync,
 } from "expo-location";
 import { style } from "./styles";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import SearchBox from "../searchbox";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  collectionGroup,
-} from "firebase/firestore";
-import { db } from "../../services/config";
 import { AuthContextList } from "../../context/authContext_list";
 
 export default function Map() {
-  const { selectedLocation, setSelectedLocation } =
+  const { selectedLocation, setSelectedLocation, onMapPress, setMapRef } =
     useContext<any>(AuthContextList);
 
   const mapRef = useRef<MapView>(null);
@@ -43,43 +31,24 @@ export default function Map() {
   }
 
   useEffect(() => {
+    setMapRef(mapRef);
     requestLocationPermission();
   }, []);
 
   useEffect(() => {
+    console.log("LOCATION CHANGED", selectedLocation);
     mapRef.current?.animateCamera({
       pitch: 70,
-      center: selectedLocation!,
+      center: selectedLocation as any,
     });
-    // watchPositionAsync(
-    //   {
-    //     accuracy: LocationAccuracy.Highest,
-    //     timeInterval: 1000,
-    //     distanceInterval: 1,
-    //   },
-    //   (response) => {
-    //     mapRef.current?.animateCamera({
-    //       pitch: 70,
-    //       center: response.coords,
-    //     });
-    //   }
-    // );
   }, []);
-
-  const handlePress = (e: MapPressEvent) => {
-    setSelectedLocation(e.nativeEvent.coordinate);
-    mapRef.current?.animateCamera({
-      pitch: 70,
-      center: e.nativeEvent.coordinate,
-    });
-  };
 
   return (
     <View style={style.container}>
       {selectedLocation && (
         <MapView
           provider={PROVIDER_GOOGLE}
-          onPress={handlePress}
+          onPress={onMapPress}
           ref={mapRef}
           style={style.map}
           initialRegion={{
@@ -96,11 +65,11 @@ export default function Map() {
               longitude: selectedLocation.longitude,
             }}
           >
-            <Image
+            {/* <Image
               source={require("../../assets/Vector.png")}
               style={{ width: 50, height: 65 }}
               resizeMode="stretch"
-            />
+            /> */}
           </Marker>
         </MapView>
       )}

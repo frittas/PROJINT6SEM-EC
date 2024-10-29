@@ -28,7 +28,7 @@ export const style = StyleSheet.create({
   logoContainer: {
     alignItems: "flex-end",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     marginBottom: 55,
   },
   logo: {

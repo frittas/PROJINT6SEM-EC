@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { View, Image, TextInput, Text } from "react-native";
-import MapView, { LatLng, MapPressEvent, Marker } from "react-native-maps";
+import MapView, {
+  LatLng,
+  MapPressEvent,
+  Marker,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import {
   getCurrentPositionAsync,
   LocationAccuracy,
@@ -46,19 +51,19 @@ export default function Map() {
       pitch: 70,
       center: selectedLocation!,
     });
-    watchPositionAsync(
-      {
-        accuracy: LocationAccuracy.Highest,
-        timeInterval: 1000,
-        distanceInterval: 1,
-      },
-      (response) => {
-        mapRef.current?.animateCamera({
-          pitch: 70,
-          center: response.coords,
-        });
-      }
-    );
+    // watchPositionAsync(
+    //   {
+    //     accuracy: LocationAccuracy.Highest,
+    //     timeInterval: 1000,
+    //     distanceInterval: 1,
+    //   },
+    //   (response) => {
+    //     mapRef.current?.animateCamera({
+    //       pitch: 70,
+    //       center: response.coords,
+    //     });
+    //   }
+    // );
   }, []);
 
   const handlePress = (e: MapPressEvent) => {
@@ -73,6 +78,7 @@ export default function Map() {
     <View style={style.container}>
       {selectedLocation && (
         <MapView
+          provider={PROVIDER_GOOGLE}
           onPress={handlePress}
           ref={mapRef}
           style={style.map}
@@ -84,6 +90,7 @@ export default function Map() {
           }}
         >
           <Marker
+            tracksViewChanges={false}
             coordinate={{
               latitude: selectedLocation.latitude,
               longitude: selectedLocation.longitude,

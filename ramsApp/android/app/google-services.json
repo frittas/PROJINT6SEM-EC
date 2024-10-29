@@ -1,0 +1,29 @@
+{
+    "project_info": {
+      "project_number": "881128436416",
+      "project_id": "rams-bc25c",
+      "storage_bucket": "rams-bc25c.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:881128436416:android:a0054f63f067908f603325",
+          "android_client_info": {
+            "package_name": "com.frittas.ramsapp"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyC1U99ixnwsTGSR_iYt95m6sCEEZh1P6KI"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }

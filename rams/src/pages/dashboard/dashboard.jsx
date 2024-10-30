@@ -21,11 +21,6 @@ function App() {
     console.log("Search for:", searchQuery); // Add your search logic here
   };
 
-  // Função para atualizar o estado do checkbox
-  const handleCheckboxChange = (value) => {
-    setSelectedDistance(value); // Define a distância selecionada
-  };
-
   return (
     <div className='dashboard'>
       {/* Header */}
@@ -41,23 +36,6 @@ function App() {
           <li className='sidebarSair'>Sair</li>
         </ul>
       </div>
-
-      {/* Search Bar */}
-      <form
-        onSubmit={handleSearchSubmit}
-        className="search-bar"
-        style={{ marginLeft: isSidebarOpen ? '175px' : '0' }} // Ajusta a margem com base no estado da sidebar
-      >
-        <div className="search-input-container">
-          <FaSearch className='searchIcon' />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search..."
-          />
-        </div>
-      </form>
 
       {/* Main Content */}
       <div

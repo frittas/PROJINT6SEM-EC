@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const Map = () => {
-    const [mapLoaded, setMapLoaded] = useState(false); // Rastreia se o mapa foi carregado
-    const [selectedDistance, setSelectedDistance] = useState('1km'); // Rastreia a distância selecionada
-    const [circle, setCircle] = useState(null); // Armazena a instância do círculo
-    const [circleCenter, setCircleCenter] = useState({ lat: -23.550520, lng: -46.633308 }); // Armazena o centro do círculo
-    const [circleRadius, setCircleRadius] = useState(1000); // Armazena o raio do círculo em metros
+    const [mapLoaded, setMapLoaded] = useState(false);
+    const [map, setMap] = useState(null);
+    const [circle, setCircle] = useState(null);
+    const [circleRadius, setCircleRadius] = useState(1000);
+    const [circleCenter, setCircleCenter] = useState({ lat: -23.550520, lng: -46.633308 });
+    const [selectedDistance, setSelectedDistance] = useState('1km');
+    const searchInputRef = useRef(null);
 
     const radiusMapping = {
         '1km': 1000,
@@ -13,45 +15,75 @@ const Map = () => {
         '10km': 10000,
     };
 
+    // Initialize the map and circle
     useEffect(() => {
         const initMap = () => {
-            const map = new window.google.maps.Map(document.getElementById('map'), {
+            const initialLocation = { lat: -23.550520, lng: -46.633308 };
+
+            const newMap = new window.google.maps.Map(document.getElementById('map'), {
                 zoom: 12,
-                center: circleCenter,
+                center: initialLocation,
             });
+            setMap(newMap);
 
             const newCircle = new window.google.maps.Circle({
-                map,
-                center: circleCenter,
-                radius: circleRadius, // Inicializa com o raio do estado
+                map: newMap,
+                center: initialLocation,
+                radius: circleRadius,
                 fillColor: '#FF0000',
                 fillOpacity: 0.35,
                 strokeWeight: 2,
-                editable: true, // Permite edição do raio
-                draggable: true, // Permite arrastar o círculo
-            });
-
-            // Atualiza o centro do círculo quando arrastado
-            window.google.maps.event.addListener(newCircle, 'dragend', () => {
-                const center = newCircle.getCenter();
-                setCircleCenter({ lat: center.lat(), lng: center.lng() });
-            });
-
-            // Atualiza o raio do círculo quando editado
-            window.google.maps.event.addListener(newCircle, 'radius_changed', () => {
-                setCircleRadius(newCircle.getRadius()); // Armazena o novo raio
+                editable: true,
+                draggable: true,
             });
 
             setCircle(newCircle);
+
+            // Keep track of the center when the circle is moved
+            newCircle.addListener('dragend', () => {
+                const newCenter = newCircle.getCenter();
+                setCircleCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+                newMap.panTo(newCenter);
+            });
+
+            // Keep track of the radius when changed manually
+            newCircle.addListener('radius_changed', () => {
+                const newRadius = newCircle.getRadius();
+                setCircleRadius(newRadius);
+
+                // Update the selected distance checkbox if radius matches a known value
+                const matchingDistance = Object.entries(radiusMapping).find(
+                    ([, radius]) => radius === newRadius
+                );
+
+                if (matchingDistance) {
+                    setSelectedDistance(matchingDistance[0]);
+                } else {
+                    setSelectedDistance(null); // Uncheck all if no match
+                }
+            });
+
+            // Add autocomplete to the search input
+            const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current);
+            autocomplete.bindTo('bounds', newMap);
+
+            autocomplete.addListener('place_changed', () => {
+                const place = autocomplete.getPlace();
+                if (!place.geometry || !place.geometry.location) return;
+
+                newMap.panTo(place.geometry.location);
+                newMap.setZoom(15);
+                newCircle.setCenter(place.geometry.location);
+                setCircleCenter({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
+            });
         };
 
         const loadScript = () => {
             if (!document.querySelector('script[src*="maps.googleapis.com"]')) {
                 const script = document.createElement('script');
-                script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&callback=initMap&v=weekly`;
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`;
                 script.async = true;
                 script.defer = true;
-                script.setAttribute('loading', 'lazy'); // Prática recomendada para carregamento preguiçoso
                 document.body.appendChild(script);
 
                 script.onload = () => setMapLoaded(true);
@@ -62,9 +94,9 @@ const Map = () => {
 
         if (!window.google) {
             loadScript();
-            window.initMap = initMap; // Expondo initMap globalmente
+            window.initMap = initMap;
         } else {
-            initMap(); // Inicializa o mapa se já estiver disponível
+            initMap();
         }
 
         return () => {
@@ -72,32 +104,44 @@ const Map = () => {
         };
     }, []);
 
-    useEffect(() => {
-        if (circle) {
-            circle.setRadius(radiusMapping[selectedDistance]); // Atualiza o raio com base na seleção
-            circle.setCenter(circleCenter); // Atualiza o centro do círculo
-        }
-    }, [selectedDistance, circle, circleCenter]); // Adiciona circleCenter como dependência
-
+    // Handle checkbox changes
     const handleCheckboxChange = (distance) => {
         setSelectedDistance(distance);
+
+        if (circle) {
+            const currentCenter = circle.getCenter(); // Get the current center
+            circle.setRadius(radiusMapping[distance]); // Set the new radius
+            circle.setCenter(currentCenter); // Maintain the current position
+        }
     };
 
+    // Handle alert button click
     const handleSendAlert = () => {
-        // Imprime o raio selecionado e o ponto central do círculo no console
-        console.log("Raio selecionado:", selectedDistance);
-        console.log("Centro do círculo:", circleCenter);
-        console.log("Raio atual do círculo:", circleRadius); // Imprime o raio atual armazenado
+        alert(`Raio: ${circleRadius / 1000} km\nLatitude: ${circleCenter.lat}\nLongitude: ${circleCenter.lng}`);
     };
 
-    if (!mapLoaded) {
-        return <p>Loading map...</p>;
-    }
+    if (!mapLoaded) return <p>Loading map...</p>;
 
     return (
         <div style={{ height: '100%', width: '100%' }}>
+            {/* Search bar */}
+            <input
+                type="text"
+                placeholder="Buscar local..."
+                ref={searchInputRef}
+                style={{
+                    width: '90%',
+                    padding: '10px',
+                    margin: '10px auto',
+                    display: 'block',
+                    fontSize: '16px',
+                }}
+            />
 
-            <div id="map" style={{ height: '90%', width: '100%' }}></div>
+            {/* Map */}
+            <div id="map" style={{ height: '80%', width: '100%' }}></div>
+
+            {/* Radius options */}
             <div className='optionsDashboard' style={{ padding: '10px' }}>
                 <label>
                     <input
@@ -124,14 +168,15 @@ const Map = () => {
                     10km
                 </label>
             </div>
+
             <button type="button" className="buttonSendAlert" onClick={handleSendAlert}>
                 Enviar Alerta
             </button>
 
-            {/* Exibir o raio atual do círculo abaixo do mapa */}
+            {/* Display current radius and center */}
             <p className='circleRadius' style={{ textAlign: 'center', marginTop: '10px' }}>
                 Raio atual do círculo: {circleRadius / 1000} km
-                <br />Latitude Atual do círculo:{circleCenter.lat}
+                <br />Latitude Atual do círculo: {circleCenter.lat}
                 <br />Longitude Atual do círculo: {circleCenter.lng}
             </p>
         </div>

@@ -33,13 +33,17 @@
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "@react-native-firebase/crashlytics"
+      "@react-native-firebase/crashlytics",
+      "expo-notifications",
+      {
+        "icon": "./src/assets/LogoRamsPush.png"
+      }
     ],
     "extra": {
       "eas": {
         "projectId": "8b90e57b-580e-498e-bfa2-68b583380c19"
       }
     },
-    "owner": "frittas"
+    "owner": "projint6sem-ec"
   }
 }

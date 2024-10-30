@@ -9,7 +9,19 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyALGP77jDE9DmHcJqoWI9OWC0XbhG0xCEU",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "rams-bc25c.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "rams-bc25c",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "rams-bc25c.appspot.com",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "881128436416",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:881128436416:web:88f4e653cb25e762603325",
+        "EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-R5S4JTDMWD",
+        "EXPO_PUBLIC_GOOGLE_KEY": "AIzaSyBdGrQxLVIYTBwZRGIzMZA2XPZwyMOW7rU"
+      }
     },
     "production": {
       "autoIncrement": true

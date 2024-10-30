@@ -1,4 +1,3 @@
-import { faUser, faLock, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import logo from "../../assets/LogoRams.png";
 import { Pressable, Text, View, Image } from "react-native";

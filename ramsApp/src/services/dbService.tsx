@@ -42,6 +42,17 @@ const addLocation = async (latlng: LatLng, title: string) => {
   }
 };
 
+const addPushToken = async (token: string) => {
+  try {
+    await addDoc(collection(db, "pushTokens"), {
+      uid: auth.currentUser?.uid,
+      token: token,
+    });
+  } catch (e) {
+    throw e;
+  }
+};
+
 const removeLocation = async (documentId: string) => {
   try {
     const docRef = doc(db, collectionName, documentId);
@@ -51,4 +62,4 @@ const removeLocation = async (documentId: string) => {
   }
 };
 
-export { addLocation, getUserLocations, removeLocation };
+export { addLocation, getUserLocations, removeLocation, addPushToken };

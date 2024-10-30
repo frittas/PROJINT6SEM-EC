@@ -34,10 +34,12 @@
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
       "@react-native-firebase/crashlytics",
-      "expo-notifications",
-      {
-        "icon": "./src/assets/LogoRamsPush.png"
-      }
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/LogoRamsPush.png"
+        }
+      ]
     ],
     "extra": {
       "eas": {

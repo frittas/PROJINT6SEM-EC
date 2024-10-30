@@ -6,6 +6,7 @@ import { FaBars, FaUser, FaSearch } from 'react-icons/fa';
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
   const [searchQuery, setSearchQuery] = useState(''); // Search state
+  const [selectedDistance, setSelectedDistance] = useState(null); // Estado para checkbox exclusivo
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar open/close
@@ -18,6 +19,11 @@ function App() {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     console.log("Search for:", searchQuery); // Add your search logic here
+  };
+
+  // Função para atualizar o estado do checkbox
+  const handleCheckboxChange = (value) => {
+    setSelectedDistance(value); // Define a distância selecionada
   };
 
   return (
@@ -37,8 +43,10 @@ function App() {
       </div>
 
       {/* Search Bar */}
-      <form onSubmit={handleSearchSubmit} className="search-bar"
-      style={{ marginLeft: isSidebarOpen ? '175px' : '0' }} // Ajusta a margem com base no estado da sidebar
+      <form
+        onSubmit={handleSearchSubmit}
+        className="search-bar"
+        style={{ marginLeft: isSidebarOpen ? '175px' : '0' }} // Ajusta a margem com base no estado da sidebar
       >
         <div className="search-input-container">
           <FaSearch className='searchIcon' />
@@ -54,21 +62,9 @@ function App() {
       {/* Main Content */}
       <div
         className='mapa'
-        style={{ marginLeft: isSidebarOpen ? '350px' : '0' }} // Adjust margin based on sidebar state
+        style={{ marginLeft: isSidebarOpen ? '350px' : '0' }} // Ajusta a margem com base no estado da sidebar
       >
         <Map />
-        <div className='optionsDashboard'>
-          <label>
-            <input type='checkbox' /> 1km
-          </label>
-          <label>
-            <input type='checkbox' /> 5km
-          </label>
-          <label>
-            <input type='checkbox' /> 10km
-          </label>
-        </div>
-        <button type="submit" className="buttonSendAlert">Enviar Alerta</button>
       </div>
     </div>
   );

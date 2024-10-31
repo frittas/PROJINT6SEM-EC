@@ -19,6 +19,7 @@ import { signOut } from "../services/authService";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
+import { LoadingContext } from "./loaderContext";
 
 export const AuthContextList: any = createContext({});
 
@@ -26,6 +27,7 @@ export const AuthProviderList = (props: any): any => {
   const modalizeNewLocationRef = useRef<Modalize>(null);
   const modalizeLogout = useRef<Modalize>(null);
   const modalizeList = useRef<Modalize>(null);
+  const { loading, setLoading } = useContext<any>(LoadingContext);
 
   const [selectedLocation, setSelectedLocation] = useState<LatLng | null>(null);
   const [newLocationName, setnewLocationName] = useState("");
@@ -52,10 +54,13 @@ export const AuthProviderList = (props: any): any => {
   const onCloseNewLocation = async () => {
     console.log(selectedLocation);
     try {
+      setLoading(true);
       await addLocation(selectedLocation as any, newLocationName);
       modalizeNewLocationRef.current?.close();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,18 +69,28 @@ export const AuthProviderList = (props: any): any => {
   };
 
   const onCloseLogout = async () => {
-    await signOut();
+    try {
+      setLoading(true);
+      await signOut();
+    } finally {
+      setLoading(false);
+    }
     navigation.navigate("Login");
   };
 
   const onOpenList = async () => {
     modalizeList.current?.open();
-    const snapshot = await getUserLocations();
-    let locations: any = [];
-    snapshot.forEach((doc) => {
-      locations.push({ ...doc.data(), id: doc.id });
-    });
-    setLocationList(locations);
+    try {
+      setLoading(true);
+      const snapshot = await getUserLocations();
+      let locations: any = [];
+      snapshot.forEach((doc) => {
+        locations.push({ ...doc.data(), id: doc.id });
+      });
+      setLocationList(locations);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onCloseList = async () => {};

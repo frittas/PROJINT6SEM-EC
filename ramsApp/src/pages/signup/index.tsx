@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../../assets/LogoRams.png";
 import { Pressable, Text, View, Image, Alert } from "react-native";
 import { CustomInput } from "../../components/AnimatedInputField";
@@ -6,9 +6,11 @@ import { style } from "./styles";
 import Button from "../../components/Button";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { signUp } from "../../services/authService";
+import { LoadingContext } from "../../context/loaderContext";
 
 export default function Signup() {
   const navigation = useNavigation<NavigationProp<any>>();
+  const { loading, setLoading } = useContext<any>(LoadingContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +23,7 @@ export default function Signup() {
 
   async function handleSignUp() {
     try {
+      setLoading(true);
       if (email && name && password == passwordConfirmation) {
         await signUp(email, password, name);
         navigation.navigate("Login");
@@ -33,6 +36,8 @@ export default function Signup() {
       } else {
         Alert.alert("Erro no cadastro " + error.message);
       }
+    } finally {
+      setLoading(false);
     }
   }
 

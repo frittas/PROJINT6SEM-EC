@@ -1,4 +1,11 @@
-import { ActivityIndicator, View, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  Dimensions,
+  Modal,
+  Text,
+} from "react-native";
 import { themes } from "../global/themes";
 import { createContext, useContext, useState } from "react";
 
@@ -14,13 +21,19 @@ export const LoadingProvider = (props: any): any => {
         setLoading,
       }}
     >
-      {loading && (
-        <ActivityIndicator
-          style={style.loader}
-          size={50}
-          color={themes.colors.text}
-        />
-      )}
+      <Modal transparent visible={loading}>
+        <View style={style.centeredView}>
+          <ActivityIndicator
+            // style={style.loading}
+            size={50}
+            color={themes.colors.white}
+          />
+          {/* <View style={style.modalView}>
+           
+          </View> */}
+        </View>
+      </Modal>
+
       {props.children}
     </LoadingContext.Provider>
   );
@@ -35,8 +48,30 @@ export const useLoader = () => {
 };
 
 export const style = StyleSheet.create({
-  loader: {
+  centeredView: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
+    opacity: 0.7,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    textAlign: "center",
   },
 });
 

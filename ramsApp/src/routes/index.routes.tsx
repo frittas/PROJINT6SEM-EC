@@ -8,20 +8,20 @@ import { LoadingContext, LoadingProvider } from "../context/loaderContext";
 export default function Routes() {
   const Stack = createStackNavigator();
   return (
-    <LoadingProvider>
-      <Stack.Navigator
-        initialRouteName="Login"
-        screenOptions={{
-          headerShown: false,
-          cardStyle: {
-            backgroundColor: themes.colors.bgScreen,
-          },
-        }}
-      >
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="BottomRoutes" component={BottomRoutes} />
-      </Stack.Navigator>
-    </LoadingProvider>
+    // <LoadingProvider>
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{
+        headerShown: false,
+        cardStyle: {
+          backgroundColor: themes.colors.bgScreen,
+        },
+      }}
+    >
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Signup" component={Signup} />
+      <Stack.Screen name="BottomRoutes" component={BottomRoutes} />
+    </Stack.Navigator>
+    // </LoadingProvider>
   );
 }

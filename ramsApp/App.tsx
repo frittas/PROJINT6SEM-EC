@@ -1,14 +1,14 @@
 import "./gesture-handler";
+import { LoadingProvider } from "./src/context/loaderContext";
 import Routes from "./src/routes/index.routes";
 import { NavigationContainer } from "@react-navigation/native";
-import { Fragment } from "react";
 
 export default function App() {
   return (
-    <Fragment>
+    <LoadingProvider>
       <NavigationContainer>
         <Routes />
       </NavigationContainer>
-    </Fragment>
+    </LoadingProvider>
   );
 }

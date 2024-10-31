@@ -103,6 +103,7 @@ export const AuthProviderList = (props: any): any => {
     return (
       <View style={style.containerLogout}>
         <View style={style.main}>
+          <Text style={style.mainText}>{auth.currentUser?.displayName}</Text>
           <Text style={style.mainText}>{auth.currentUser?.email}</Text>
         </View>
         <View style={style.bottom}>

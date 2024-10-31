@@ -19,7 +19,7 @@ export const style = StyleSheet.create({
     paddingHorizontal: 35,
   },
   footer: {
-    height: Dimensions.get("window").height / 8,
+    height: Dimensions.get("window").height / 6,
     width: "100%",
     paddingHorizontal: 35,
     alignItems: "center",

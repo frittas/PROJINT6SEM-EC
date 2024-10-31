@@ -7,7 +7,7 @@ export const style = StyleSheet.create({
     justifyContent: "center",
   },
   header: {
-    height: Dimensions.get("window").height / 10,
+    height: Dimensions.get("window").height / 8,
 
     width: "100%",
     alignItems: "center",

@@ -6,7 +6,9 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build-d": "npx eas build --profile development --platform android",
+    "build-p": "npx eas build -p android --profile preview"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",

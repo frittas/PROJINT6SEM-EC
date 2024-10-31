@@ -29,8 +29,8 @@ const Login = () => {
   }
 
   return (
-    <body className="login">
-      <div className="wrapper"> {/*Container Principal da Pagina de Login*/}
+    <div className="login">
+      <div className="wrapper"> {/* Container Principal da Página de Login */}
         <form onSubmit={handleSubmit}>
 
           {/* Cabeçalho do sistema */}
@@ -53,7 +53,7 @@ const Login = () => {
             />
             <FaUser className="icon" />
           </div>
-  
+
           {/* Campo de Senha */}
           <div className="input-group">
             <input
@@ -65,18 +65,18 @@ const Login = () => {
             />
             <FaLock className="icon" />
           </div>
-  
+
           {/* Lembrete e link de senha esquecida */}
           <div className="options">
             <label>
               <input type="checkbox" /> Lembrar-Me
             </label>
-            <a href="#" className="forgot-password">Esqueci Minha Senha</a> {/*INSERIR LINK*/}
+            <a href="#" className="forgot-password">Esqueci Minha Senha</a> {/* INSERIR LINK */}
           </div>
-  
+
           {/* Botão de login */}
           <button type="submit" className="btn-login">Login</button>
-  
+
           {/* Link de registro */}
           <div className="register-link">
             <p>
@@ -85,8 +85,9 @@ const Login = () => {
           </div>
         </form>
       </div>
-    </body>
-  );
-}
+    </div>
+);
+
+};
 
 export default Login;

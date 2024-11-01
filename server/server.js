@@ -13,7 +13,9 @@ const {
   doc,
   setDoc,
   addDoc,
+  GeoPoint,
 } = require("firebase/firestore");
+const geofirestore = require('geofirestore'); // Importar o geofirestore
 
 const app = express();
 app.use(express.json());
@@ -34,6 +36,8 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
+
+const GeoFirestore = geofirestore.initializeApp(db);
 
 // Rota de Cadastro
 app.post("/cadastro", async (req, res) => {
@@ -69,7 +73,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-//Rota de Localizacoes
+//Rota para adicionar localizacoes
 app.post("/locations", async (req, res) => {
   const { uid, title, latitude, longitude } = req.body;
 
@@ -100,6 +104,83 @@ app.post("/locations", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+//Rota para adicionar geopoints
+app.post("/geopoint", async (req, res) => {
+  const { uid, title, latitude, longitude } = req.body;
+
+  // Validar entrada
+  if (!uid || !title || !latitude || !longitude) {
+    return res.status(400).json({
+      message: "Insira todos os valores!",
+    });
+  }
+
+  try {
+    // Adicionar a nova localização com título
+    const newLocationRef = await addDoc(collection(db, "locations"), {
+      uid,
+      title,
+      location: new GeoPoint(latitude, longitude),
+      createdAt: new Date(),
+    });
+
+    res.status(201).json({
+      message: "Localização adicionada",
+      locationId: newLocationRef.id,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+////////////////////////////////////////////////////////////
+
+// // Rota para buscar localizações dentro de um raio
+// const firestore = firebase.firestore();
+// //const geofirestore = require('geofirestore');
+// const GeoFirestore = geofirestore.initializeApp(firestore); // Inicializar o GeoFirestore com a sua referência do Firestore
+// Importar o GeoFirestore
+
+
+// Inicializar o GeoFirestore com a referência do Firestore
+//const firestore = getFirestore(firebaseApp); // Obter a referência do Firestore corretamente
+//const geoFirestore = new GeoFirestore(firestore); // Inicializar o GeoFirestore
+
+app.post("/geofirestore", async (req, res) => {
+  const { latitude, longitude, radius } = req.body;
+
+  // Validar entrada
+  if (!latitude || !longitude || !radius) {
+    return res.status(400).json({
+      message: "Insira latitude, longitude e raio!",
+    });
+  }
+
+  try {
+    // Criar uma referência à coleção de localizações
+    const geoCollectionRef = GeoFirestore.collection('locations');
+
+    // Consultar as localizações dentro do raio especificado
+    const query = geoCollectionRef.near({
+      center: new GeoPoint(parseFloat(latitude), parseFloat(longitude)),
+      radius: parseFloat(radius)
+    });
+    
+    const snapshot = await query.get();
+
+    // Extrair os dados das localizações
+    const locations = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.status(200).json(locations);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 // Iniciar Servidor
 const PORT = 3000;

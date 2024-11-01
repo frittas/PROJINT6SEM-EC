@@ -7,6 +7,7 @@ import {
   where,
   deleteDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "./config";
 import { LatLng } from "react-native-maps";
@@ -42,6 +43,31 @@ const addLocation = async (latlng: LatLng, title: string) => {
   }
 };
 
+const addPushToken = async (token: string) => {
+  try {
+    const q = query(
+      collection(db, "pushTokens"),
+      where("uid", "==", auth.currentUser?.uid)
+    );
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.docs.length) {
+      querySnapshot?.docs.forEach(async (pushToken) => {
+        const pushTokenRef = doc(db, "pushTokens", pushToken.id);
+        await updateDoc(pushTokenRef, {
+          token: token,
+        });
+      });
+    } else {
+      await addDoc(collection(db, "pushTokens"), {
+        uid: auth.currentUser?.uid,
+        token: token,
+      });
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const removeLocation = async (documentId: string) => {
   try {
     const docRef = doc(db, collectionName, documentId);
@@ -51,4 +77,4 @@ const removeLocation = async (documentId: string) => {
   }
 };
 
-export { addLocation, getUserLocations, removeLocation };
+export { addLocation, getUserLocations, removeLocation, addPushToken };

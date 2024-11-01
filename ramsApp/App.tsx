@@ -1,12 +1,14 @@
 import "./gesture-handler";
-import { StyleSheet } from "react-native";
+import { LoadingProvider } from "./src/context/loaderContext";
 import Routes from "./src/routes/index.routes";
 import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Routes />
-    </NavigationContainer>
+    <LoadingProvider>
+      <NavigationContainer>
+        <Routes />
+      </NavigationContainer>
+    </LoadingProvider>
   );
 }

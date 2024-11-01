@@ -1,4 +1,3 @@
-import { faCheck, faClose, faHome } from "@fortawesome/free-solid-svg-icons";
 import React, { createContext, useContext, useRef, useState } from "react";
 import {
   Text,
@@ -13,13 +12,14 @@ import { Modalize } from "react-native-modalize";
 import { CustomInput } from "../components/AnimatedInputField";
 import Button from "../components/Button";
 import { themes } from "../global/themes";
-import { LatLng } from "react-native-maps";
+import MapView, { LatLng, MapPressEvent } from "react-native-maps";
 import { addLocation, getUserLocations } from "../services/dbService";
 import { auth } from "../services/config";
 import { signOut } from "../services/authService";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { Swipeable, TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
+import { LoadingContext } from "./loaderContext";
 
 export const AuthContextList: any = createContext({});
 
@@ -27,11 +27,24 @@ export const AuthProviderList = (props: any): any => {
   const modalizeNewLocationRef = useRef<Modalize>(null);
   const modalizeLogout = useRef<Modalize>(null);
   const modalizeList = useRef<Modalize>(null);
+  const { loading, setLoading } = useContext<any>(LoadingContext);
 
   const [selectedLocation, setSelectedLocation] = useState<LatLng | null>(null);
   const [newLocationName, setnewLocationName] = useState("");
+  const [mapRef, setMapRef] = useState<React.RefObject<MapView> | null>(null);
+
   const [locationList, setLocationList] = useState([]);
+  const [pushTokenString, setPushTokenString] = useState([]);
+
   const navigation = useNavigation<NavigationProp<any>>();
+
+  const onMapPress = (e: any) => {
+    setSelectedLocation(e.nativeEvent.coordinate);
+    mapRef?.current?.animateCamera({
+      pitch: 70,
+      center: e.nativeEvent.coordinate,
+    });
+  };
 
   const onOpenNewLocation = () => {
     setnewLocationName("");
@@ -41,10 +54,13 @@ export const AuthProviderList = (props: any): any => {
   const onCloseNewLocation = async () => {
     console.log(selectedLocation);
     try {
+      setLoading(true);
       await addLocation(selectedLocation as any, newLocationName);
       modalizeNewLocationRef.current?.close();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,18 +69,28 @@ export const AuthProviderList = (props: any): any => {
   };
 
   const onCloseLogout = async () => {
-    await signOut();
+    try {
+      setLoading(true);
+      await signOut();
+    } finally {
+      setLoading(false);
+    }
     navigation.navigate("Login");
   };
 
   const onOpenList = async () => {
     modalizeList.current?.open();
-    const snapshot = await getUserLocations();
-    let locations: any = [];
-    snapshot.forEach((doc) => {
-      locations.push({ ...doc.data(), id: doc.id });
-    });
-    setLocationList(locations);
+    try {
+      setLoading(true);
+      const snapshot = await getUserLocations();
+      let locations: any = [];
+      snapshot.forEach((doc) => {
+        locations.push({ ...doc.data(), id: doc.id });
+      });
+      setLocationList(locations);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onCloseList = async () => {};
@@ -92,6 +118,7 @@ export const AuthProviderList = (props: any): any => {
     return (
       <View style={style.containerLogout}>
         <View style={style.main}>
+          <Text style={style.mainText}>{auth.currentUser?.displayName}</Text>
           <Text style={style.mainText}>{auth.currentUser?.email}</Text>
         </View>
         <View style={style.bottom}>
@@ -113,10 +140,14 @@ export const AuthProviderList = (props: any): any => {
               //   <FontAwesome size={20} name="close"></FontAwesome>
               // </TouchableOpacity>
               <Swipeable key={index} renderRightActions={renderRightActions}>
-                <View style={style.row}>
+                <TouchableOpacity style={style.row}>
                   <Text style={style.rowText}>{location.title}</Text>
-                  <FontAwesome name="chevron-right" size={20}></FontAwesome>
-                </View>
+                  <FontAwesome
+                    style={style.iconLeft}
+                    name="chevron-right"
+                    size={20}
+                  ></FontAwesome>
+                </TouchableOpacity>
               </Swipeable>
             );
           })}
@@ -162,6 +193,9 @@ export const AuthProviderList = (props: any): any => {
         onCloseList,
         selectedLocation,
         setSelectedLocation,
+        onMapPress,
+        setMapRef,
+        pushTokenString,
       }}
     >
       {props.children}
@@ -183,6 +217,7 @@ export const AuthProviderList = (props: any): any => {
         ref={modalizeList}
         childrenStyle={{ height: Dimensions.get("window").height / 2 }}
         adjustToContentHeight={true}
+        onClosed={onCloseList}
       >
         {modalList()}
       </Modalize>
@@ -263,5 +298,8 @@ export const style = StyleSheet.create({
     color: "#fcfcfc",
     fontWeight: "bold",
     padding: 3,
+  },
+  iconLeft: {
+    paddingRight: 20,
   },
 });

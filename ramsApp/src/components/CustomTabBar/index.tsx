@@ -1,13 +1,6 @@
 import React, { useContext } from "react";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-} from "react-native";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { themes } from "../../global/themes";
-import { faBars, faPlus, faUser } from "@fortawesome/free-solid-svg-icons";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { AuthContextList } from "../../context/authContext_list";
 import { FontAwesome } from "@expo/vector-icons";

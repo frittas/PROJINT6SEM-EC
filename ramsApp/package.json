@@ -6,7 +6,9 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build-d": "npx eas build --profile development --platform android",
+    "build-p": "npx eas build -p android --profile preview"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -31,7 +33,10 @@
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.5",
     "react-native-screens": "3.31.1",
-    "react-native-svg": "15.2.0"
+    "react-native-svg": "15.2.0",
+    "expo-notifications": "~0.28.19",
+    "expo-device": "~6.0.2",
+    "expo-constants": "~16.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

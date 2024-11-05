@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { FaSearch} from 'react-icons/fa';
 
 const Map = () => {
     const [mapLoaded, setMapLoaded] = useState(false);
@@ -127,22 +128,40 @@ const Map = () => {
     return (
         <div style={{ height: '100%', width: '100%' }}>
             {/* Search bar */}
-            <input
-                className='inputSeachBar'
-                type="text"
-                placeholder="Buscar local..."
-                ref={searchInputRef}
+            <div className="searchBarContainer">
+                <FaSearch className='searchIcon'/>
+                <input
+                    className="inputSearchBar"
+                    type="text"
+                    placeholder="Buscar local..."
+                    ref={searchInputRef}
+                />
+            </div>
+            <div className='inputContainer'>
+                {/* Title input */}
+                <input
+                    className='inputMessageTitle'
+                    type="text"
+                    placeholder="Titulo"
+                    value={messageTitle}
+                    onChange={(e) => setMessageTitle(e.target.value)}
+                    ></input>
 
-            />
-            <input
-                className='inputMessegeTitle'
-                type="text"
-                placeholder="Titulo"
-                value={messageTitle}
-                onChange={(e) => setMessageTitle(e.target.value)}
-                ></input>
+                {/* Message input */}
+                <input
+                    className='inputMessage'
+                    type="text"
+                    placeholder="Mensagem"
+                    value={messageBody}
+                    onChange={(e) => setMessageBody(e.target.value)}
+                    ></input>
+            </div>
             {/* Map */}
-            <div id="map" style={{ height: '80%', width: '100%' }}></div>
+            <div 
+            id="map"
+            style={{ height: '80%', width: '100%' }}
+            
+            ></div>
 
             {/* Radius options */}
             <div className='optionsDashboard' style={{ padding: '10px' }}>

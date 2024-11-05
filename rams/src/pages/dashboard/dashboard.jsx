@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './dashboard.css';
 import Map from './map';
-import { FaBars, FaUser, FaSearch } from 'react-icons/fa';
+import { FaBars, FaUser} from 'react-icons/fa';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state

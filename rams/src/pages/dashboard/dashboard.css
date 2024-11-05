@@ -90,7 +90,7 @@
 
 /* Map section */
 .mapa {
-  margin-top: 4%;
+  margin-top: 8vh;
   margin-left: 0; /* Set initial margin-left to 0 */
   margin-bottom: 0%;
   align-self: center;
@@ -98,6 +98,53 @@
   height: calc(80vh - 9vh); /* Adjust the height to fill the available space */
   transition: margin-left 0.3s ease; /* Add transition for margin-left */
 }
+
+.searchBarContainer {
+  position: relative;
+  width: 100%;
+  margin: 10px auto;
+}
+
+.inputSearchBar {
+  width: 100%;
+  padding: 10px 10px 10px 35px; /* Ajuste o padding esquerdo para o ícone */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 40px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px; /* Posição do ícone dentro da barra de pesquisa */
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+}
+
+.inputContainer {
+  display: flex;
+  gap: 10px; /* Espaço entre os inputs */
+  width: 100%; /* Para ocupar toda a largura do contêiner pai */
+  padding-bottom: 10px;
+}
+
+.inputMessageTitle {
+  flex: 1; /* Ocupa uma parte menor da linha */
+  max-width: 150px; /* Define uma largura máxima */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 40px;
+}
+
+.inputMessage {
+  flex: 3; /* Ocupa o espaço restante */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 40px;
+}
+
 
 .buttonSendAlert {
   width: 100%;

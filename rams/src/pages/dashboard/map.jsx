@@ -8,6 +8,8 @@ const Map = () => {
     const [circleCenter, setCircleCenter] = useState({ lat: -23.550520, lng: -46.633308 });
     const [selectedDistance, setSelectedDistance] = useState('1km');
     const searchInputRef = useRef(null);
+    const [messageTitle, setMessageTitle] = useState('');
+    const [messageBody, setMessageBody] = useState('');
 
     const radiusMapping = {
         '1km': 1000,
@@ -117,7 +119,7 @@ const Map = () => {
 
     // Handle alert button click
     const handleSendAlert = () => {
-        alert(`Raio: ${circleRadius / 1000} km\nLatitude: ${circleCenter.lat}\nLongitude: ${circleCenter.lng}`);
+        alert(`Titulo: ${messageTitle}\nmensagem: ${messageBody}\nRaio: ${circleRadius / 1000} km\nLatitude: ${circleCenter.lat}\nLongitude: ${circleCenter.lng}`);
     };
 
     if (!mapLoaded) return <p>Loading map...</p>;
@@ -126,18 +128,19 @@ const Map = () => {
         <div style={{ height: '100%', width: '100%' }}>
             {/* Search bar */}
             <input
+                className='inputSeachBar'
                 type="text"
                 placeholder="Buscar local..."
                 ref={searchInputRef}
-                style={{
-                    width: '90%',
-                    padding: '10px',
-                    margin: '10px auto',
-                    display: 'block',
-                    fontSize: '16px',
-                }}
-            />
 
+            />
+            <input
+                className='inputMessegeTitle'
+                type="text"
+                placeholder="Titulo"
+                value={messageTitle}
+                onChange={(e) => setMessageTitle(e.target.value)}
+                ></input>
             {/* Map */}
             <div id="map" style={{ height: '80%', width: '100%' }}></div>
 
@@ -175,7 +178,9 @@ const Map = () => {
 
             {/* Display current radius and center */}
             <p className='circleRadius' style={{ textAlign: 'center', marginTop: '10px' }}>
-                Raio atual do círculo: {circleRadius / 1000} km
+                Titulo: {messageTitle}
+                <br />mensagem: {messageBody}
+                <br />Raio atual do círculo: {circleRadius / 1000} km
                 <br />Latitude Atual do círculo: {circleCenter.lat}
                 <br />Longitude Atual do círculo: {circleCenter.lng}
             </p>

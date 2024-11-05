@@ -26,7 +26,7 @@ function App() {
       {/* Header */}
       <div className='header'>
         <FaBars className='barras' onClick={toggleSidebar} />
-        <h1 className='header-title'>Dashboard</h1>
+        <h1 className='header-title'>RAMS</h1>
         <FaUser className='usuario' style={{ marginLeft: 'auto' }} />
       </div>
 

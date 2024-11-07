@@ -10,11 +10,15 @@ const {
 const {
   getFirestore,
   collection,
+  query,
+  where,
   doc,
+  getDocs,
   setDoc,
   addDoc,
   GeoPoint,
 } = require("firebase/firestore");
+const { Expo } = require('expo-server-sdk'); // Mudar para desestruturação
 
 const app = express();
 app.use(express.json());
@@ -53,65 +57,53 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// Função para buscar locais próximos dentro de 5 km e filtrar por UID único
- function buscarLocaisProximos(lat, lng, radius) {
-  //const lat = centroGeoPoint.latitude;
- // const lng = centroGeoPoint.longitude;
-
-  // Aproximação para 1 grau de latitude/longitude em km
+// Função para buscar locais próximos dentro do raio e filtrar por UID único
+async function buscarLocaisProximos(lat, lng, radius, message) {
   const kmPerDegreeLat = 110.574;
   const kmPerDegreeLng = 111.32 * Math.cos((lat * Math.PI) / 180);
 
-  // Calcular os limites geográficos para a consulta
   const latMin = lat - radius / kmPerDegreeLat;
   const latMax = lat + radius / kmPerDegreeLat;
   const lngMin = lng - radius / kmPerDegreeLng;
   const lngMax = lng + radius / kmPerDegreeLng;
 
-  // Criar um Set para armazenar UIDs únicos
   const usuariosUnicos = new Set();
 
-  // Consulta Firestore com limites
-  db.collection("locations")
-    .where("location", ">=", new GeoPoint(latMin, lngMin))
-    .where("location", "<=", new GeoPoint(latMax, lngMax))
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const localLat = data.location.latitude;
-        const localLng = data.location.longitude;
+  const locationsRef = collection(db, "locations");
+  const q = query(
+    locationsRef,
+    where("location", ">=", new GeoPoint(latMin, lngMin)),
+    where("location", "<=", new GeoPoint(latMax, lngMax))
+  );
 
-        // Calcular a distância do ponto central
-        const distancia = haversineDistance(lat, lng, localLat, localLng);
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    const localLat = data.location.latitude;
+    const localLng = data.location.longitude;
 
-        // Verificar se está dentro do raio de 5 km
-        if (distancia <= radius) {
-          // Adicionar o UID ao Set de usuários únicos
-          usuariosUnicos.add(data.uid);
-        }
-      });
+    const distancia = haversineDistance(lat, lng, localLat, localLng);
 
-      // Converter Set de UIDs únicos para um array
-      const usuariosArray = Array.from(usuariosUnicos);
+    if (distancia <= radius) {
+      usuariosUnicos.add(data.uid);
+    }
+  });
 
-      if (usuariosArray.length > 0) {
-        console.log(
-          `Usuários encontrados dentro do raio: ${usuariosArray.join(", ")}`
-        );
-        // Chamar a função para buscar os pushTokens correspondentes aos UIDs
-        buscarPushTokens(usuariosArray);
-      } else {
-        console.log("Nenhum usuário encontrado dentro do raio");
-      }
-    })
-    .catch((error) => {
-      console.error("Erro ao buscar locais:", error);
-    });
+  const usuariosArray = Array.from(usuariosUnicos);
+
+  if (usuariosArray.length > 0) {
+    console.log(`Usuários encontrados dentro do raio: ${usuariosArray.join(", ")}`);
+    buscarPushTokens(usuariosArray, message);
+  } else {
+    console.log("Nenhum usuário encontrado dentro do raio");
+  }
+
+  return usuariosArray;
 }
+    
 
 // Função para buscar pushTokens dos UIDs encontrados e agrupar por usuário
-function buscarPushTokens(uids) {
+function buscarPushTokens(uids, message) {
   if (uids.length === 0) {
     console.log("Nenhum usuário encontrado.");
     return;
@@ -123,9 +115,10 @@ function buscarPushTokens(uids) {
   const tokensPorUsuario = {};
 
   // Criar uma consulta para a coleção pushTokens, filtrando pelos UIDs
-  db.collection("pushTokens")
-    .where("uid", "in", uids) // Buscar pushTokens dos UIDs
-    .get()
+  const pushTokensRef = collection(db, "pushTokens");
+  const q = query(pushTokensRef, where("uid", "in", uids)); // Define a consulta
+
+  getDocs(q)
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -140,7 +133,6 @@ function buscarPushTokens(uids) {
           tokensPorUsuario[uid] = [pushToken];
         }
       });
-
       // Exibir os usuários e seus tokens no console
       for (const uid in tokensPorUsuario) {
         const tokens = tokensPorUsuario[uid];
@@ -258,7 +250,7 @@ app.post("/push", async (req, res) => {
     const lng = parseFloat(longitude);
     const rad = parseFloat(radius);
 
-    const usuariosEncontrados = await buscarLocaisProximos(lat, lng, rad);
+    const usuariosEncontrados = await buscarLocaisProximos(lat, lng, rad, message);
 
     if (usuariosEncontrados.length > 0) {
         res.json({ success: true, usuarios: usuariosEncontrados });
@@ -270,8 +262,6 @@ app.post("/push", async (req, res) => {
     res.status(500).send('Erro ao processar a solicitação.');
 }
 });
-
-  
 
 // Iniciar Servidor
 const PORT = 3000;

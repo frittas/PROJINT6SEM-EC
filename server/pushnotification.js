@@ -5,7 +5,7 @@ const { initializeApp } = require("firebase/app");
 const {
   getAuth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  signInWithEmailAndPassword
 } = require("firebase/auth");
 const {
   getFirestore,
@@ -16,9 +16,9 @@ const {
   getDocs,
   setDoc,
   addDoc,
-  GeoPoint,
+  GeoPoint
 } = require("firebase/firestore");
-const { Expo } = require('expo-server-sdk'); // Mudar para desestruturação
+const { Expo } = require("expo-server-sdk"); // Mudar para desestruturação
 
 const app = express();
 app.use(express.json());
@@ -40,8 +40,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
-//////////////////////////////////////////////////////////////////////////////////
-//FUNCOES
 // Função para calcular distância entre dois pontos em km (usando a fórmula de Haversine)
 function haversineDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Raio da Terra em km
@@ -58,7 +56,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 // Função para buscar locais próximos dentro do raio e filtrar por UID único
-async function buscarLocaisProximos(lat, lng, radius, message) {
+async function buscarLocaisProximos(lat, lng, radius, title, message) {
   const kmPerDegreeLat = 110.574;
   const kmPerDegreeLng = 111.32 * Math.cos((lat * Math.PI) / 180);
 
@@ -92,18 +90,19 @@ async function buscarLocaisProximos(lat, lng, radius, message) {
   const usuariosArray = Array.from(usuariosUnicos);
 
   if (usuariosArray.length > 0) {
-    console.log(`Usuários encontrados dentro do raio: ${usuariosArray.join(", ")}`);
-    buscarPushTokens(usuariosArray, message);
+    console.log(
+      `Usuários encontrados dentro do raio: ${usuariosArray.join(", ")}`
+    );
+    buscarPushTokens(usuariosArray, title, message);
   } else {
     console.log("Nenhum usuário encontrado dentro do raio");
   }
 
   return usuariosArray;
 }
-    
 
 // Função para buscar pushTokens dos UIDs encontrados e agrupar por usuário
-function buscarPushTokens(uids, message) {
+function buscarPushTokens(uids, title, message) {
   if (uids.length === 0) {
     console.log("Nenhum usuário encontrado.");
     return;
@@ -147,11 +146,9 @@ function buscarPushTokens(uids, message) {
 
         if (tokensValidos.length > 0) {
           // Chamar a função para enviar a notificação
-          enviarNotificacao(tokensValidos, message);
+          enviarNotificacao(tokensValidos, title, message);
         } else {
-          console.log(
-            `Nenhum token válido encontrado para o usuário ${uid}.`
-          );
+          console.log(`Nenhum token válido encontrado para o usuário ${uid}.`);
         }
       }
 
@@ -165,7 +162,7 @@ function buscarPushTokens(uids, message) {
 }
 
 // Função para enviar notificações usando o Expo
-function enviarNotificacao(pushTokens, mensagem) {
+function enviarNotificacao(pushTokens, title, mensagem) {
   // Crie um novo cliente SDK do Expo
   let expo = new Expo({
     accessToken: process.env.EXPO_ACCESS_TOKEN,
@@ -180,6 +177,7 @@ function enviarNotificacao(pushTokens, mensagem) {
       to: pushToken,
       sound: "default",
       body: mensagem,
+      title: title,
       data: { withSome: "data" },
     });
   }
@@ -236,7 +234,6 @@ function enviarNotificacao(pushTokens, mensagem) {
 }
 
 app.post("/push", async (req, res) => {
-  
   const { message, title, latitude, longitude, radius } = req.body;
   // Validar entrada
   if (!message || !title || !latitude || !longitude || !radius) {
@@ -250,17 +247,26 @@ app.post("/push", async (req, res) => {
     const lng = parseFloat(longitude);
     const rad = parseFloat(radius);
 
-    const usuariosEncontrados = await buscarLocaisProximos(lat, lng, rad, message);
+    const usuariosEncontrados = await buscarLocaisProximos(
+      lat,
+      lng,
+      rad,
+      title,
+      message
+    );
 
     if (usuariosEncontrados.length > 0) {
-        res.json({ success: true, usuarios: usuariosEncontrados });
+      res.json({ success: true, usuarios: usuariosEncontrados });
     } else {
-        res.json({ success: true, message: "Nenhum usuário encontrado dentro do raio" });
+      res.json({
+        success: true,
+        message: "Nenhum usuário encontrado dentro do raio",
+      });
     }
-} catch (error) {
+  } catch (error) {
     console.error(error);
-    res.status(500).send('Erro ao processar a solicitação.');
-}
+    res.status(500).send("Erro ao processar a solicitação.");
+  }
 });
 
 // Iniciar Servidor

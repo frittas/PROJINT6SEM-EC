@@ -1,6 +1,6 @@
 // services/pushNotificationService.js
 const { Expo } = require("expo-server-sdk");
-const ExpoPushToken = require("expo-server-sdk").ExpoPushToken;
+//const ExpoPushToken = require("expo-server-sdk").ExpoPushToken;
 
 // Função para enviar notificações usando o Expo
 function enviarNotificacao(pushTokens, title, mensagem) {

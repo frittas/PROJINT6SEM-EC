@@ -11,6 +11,7 @@ const Map = () => {
     const searchInputRef = useRef(null);
     const [messageTitle, setMessageTitle] = useState('');
     const [messageBody, setMessageBody] = useState('');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const radiusMapping = {
         '1km': 1000,
@@ -118,10 +119,68 @@ const Map = () => {
         }
     };
 
-    // Handle alert button click
-    const handleSendAlert = () => {
-        alert(`Titulo: ${messageTitle}\nmensagem: ${messageBody}\nRaio: ${circleRadius / 1000} km\nLatitude: ${circleCenter.lat}\nLongitude: ${circleCenter.lng}`);
+    const jsonData = {
+        message: messageBody,
+        title: messageTitle,
+        latitude: Number(circleCenter.lat),  // Ensuring it's a number
+        longitude: Number(circleCenter.lng),  // Ensuring it's a number
+        radius: Number(circleRadius),  // Ensuring it's a number
     };
+    
+    const showSnackbar = (messageCode) => {
+        const snackbar = document.getElementById("snackbar");
+        snackbar.className = "show";
+        setTimeout(() => {
+          snackbar.className = snackbar.className.replace("show", "");
+        }, 3000);
+        if (messageCode == 1)
+        {
+            setSnackbarMessage(`Alerta enviado com sucesso!`);
+        }
+        else if (messageCode == 2)
+        {
+            setSnackbarMessage(`Erro ao enviar alerta!`);
+        }
+        else if (messageCode == 3)
+        {
+            setSnackbarMessage(`Preencha todos os campos!`);
+        }
+        else
+        { 
+            setSnackbarMessage(`Erro ao enviar alerta!`);
+        }
+      };
+    
+    // Handle alert button click
+    const handleSendAlert = async () => {
+        if (!messageTitle || !messageBody) {
+            showSnackbar(3);
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:3000/push', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),  // Stringify the object before sending
+            });
+    
+            if (!response.ok) {
+                showSnackbar(2);
+                throw new Error(`Server error: ${response.status}`);
+            }
+            else {
+                showSnackbar(1);
+            }
+            const result = await response.json();
+            console.log('Response from server:', result);
+        } catch (error) {
+            console.error('Error sending data:', error);
+            showSnackbar(2);
+        }
+    };
+    
 
     if (!mapLoaded) return <p>Loading map...</p>;
 
@@ -195,14 +254,12 @@ const Map = () => {
                 Enviar Alerta
             </button>
 
-            {/* Display current radius and center */}
-            <p className='circleRadius' style={{ textAlign: 'center', marginTop: '10px' }}>
-                Titulo: {messageTitle}
-                <br />mensagem: {messageBody}
-                <br />Raio atual do círculo: {circleRadius / 1000} km
-                <br />Latitude Atual do círculo: {circleCenter.lat}
-                <br />Longitude Atual do círculo: {circleCenter.lng}
-            </p>
+            {/* Snackbar*/}
+            <div id="snackbar">
+		        <p>
+			        {snackbarMessage}
+		        </p>
+	        </div>
         </div>
     );
 };

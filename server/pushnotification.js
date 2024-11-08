@@ -20,9 +20,15 @@ const {
 } = require("firebase/firestore");
 const { Expo } = require("expo-server-sdk"); // Mudar para desestruturação
 
+const corsOptions = {
+  origin: 'http://localhost:5173',  // Allow requests from this origin
+  methods: ['GET', 'POST'],  // Allow specific HTTP methods
+  allowedHeaders: ['Content-Type'],  // Allow headers like Content-Type
+};
+
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Configuração Firebase
 const firebaseConfig = {

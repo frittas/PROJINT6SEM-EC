@@ -2,28 +2,21 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { initializeApp } = require("firebase/app");
-const {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} = require("firebase/auth");
+const { getAuth } = require("firebase/auth");
 const {
   getFirestore,
   collection,
   query,
   where,
-  doc,
   getDocs,
-  setDoc,
-  addDoc,
-  GeoPoint
+  GeoPoint,
 } = require("firebase/firestore");
 const { Expo } = require("expo-server-sdk"); // Mudar para desestruturação
 
 const corsOptions = {
-  origin: 'http://localhost:5173',  // Allow requests from this origin
-  methods: ['GET', 'POST'],  // Allow specific HTTP methods
-  allowedHeaders: ['Content-Type'],  // Allow headers like Content-Type
+  origin: "http://localhost:5173", // Allow requests from this origin
+  methods: ["GET", "POST"], // Allow specific HTTP methods
+  allowedHeaders: ["Content-Type"], // Allow headers like Content-Type
 };
 
 const app = express();
@@ -43,7 +36,6 @@ const firebaseConfig = {
 
 // Inicializacao do Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
 // Função para calcular distância entre dois pontos em km (usando a fórmula de Haversine)
@@ -73,9 +65,8 @@ async function buscarLocaisProximos(lat, lng, radius, title, message) {
 
   const usuariosUnicos = new Set();
 
-  const locationsRef = collection(db, "locations");
-  const q = query(
-    locationsRef,
+   const q = query(
+    collection(db, "locations"),
     where("location", ">=", new GeoPoint(latMin, lngMin)),
     where("location", "<=", new GeoPoint(latMax, lngMax))
   );
@@ -87,7 +78,6 @@ async function buscarLocaisProximos(lat, lng, radius, title, message) {
     const localLng = data.location.longitude;
 
     const distancia = haversineDistance(lat, lng, localLat, localLng);
-
     if (distancia <= radius) {
       usuariosUnicos.add(data.uid);
     }

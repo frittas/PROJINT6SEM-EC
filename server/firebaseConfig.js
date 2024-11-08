@@ -1,5 +1,6 @@
 // firebaseConfig.js
 const { initializeApp } = require("firebase/app");
+const { getFirestore } = require("firebase/firestore");
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -11,6 +12,9 @@ const firebaseConfig = {
   measurementId: process.env.MEASUREMENT_ID,
 };
 
+// Inicialize o Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp); // Certifique-se de que isto retorna uma instância Firestore
 
-module.exports = { firebaseApp };
+module.exports = { db }; // Exporta `db` para uso em outros arquivos
+

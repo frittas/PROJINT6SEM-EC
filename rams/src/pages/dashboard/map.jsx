@@ -13,7 +13,7 @@ const Map = () => {
     const [messageBody, setMessageBody] = useState('');
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
-    const radiusMapping = {
+    const radiusMapping = { // Mapeando distancias com seus respectivos valores
         '1km': 1000,
         '5km': 5000,
         '10km': 10000,
@@ -22,7 +22,7 @@ const Map = () => {
     // Initialize the map and circle
     useEffect(() => {
         const initMap = () => {
-            const initialLocation = { lat: -23.550520, lng: -46.633308 };
+            const initialLocation = { lat: -23.550520, lng: -46.633308 }; // São Paulo
 
             const newMap = new window.google.maps.Map(document.getElementById('map'), {
                 zoom: 12,
@@ -43,97 +43,99 @@ const Map = () => {
 
             setCircle(newCircle);
 
-            // Keep track of the center when the circle is moved
+            // Move o centro do mapa quando o circulo for arrastado
             newCircle.addListener('dragend', () => {
                 const newCenter = newCircle.getCenter();
                 setCircleCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
                 newMap.panTo(newCenter);
             });
 
-            // Keep track of the radius when changed manually
+            //  Atualiza o raio do circulo quando ele for alterado
             newCircle.addListener('radius_changed', () => {
                 const newRadius = newCircle.getRadius();
                 setCircleRadius(newRadius);
 
-                // Update the selected distance checkbox if radius matches a known value
+                // Atualiza o checkbox correspondente 
+                // Verifica se o raio atual corresponde ao raio do mapeamento
                 const matchingDistance = Object.entries(radiusMapping).find(
                     ([, radius]) => radius === newRadius
                 );
 
-                if (matchingDistance) {
-                    setSelectedDistance(matchingDistance[0]);
+                if (matchingDistance) { // Se o raio atual corresponder
+                    setSelectedDistance(matchingDistance[0]); // Checa o checkbox correspondente
                 } else {
-                    setSelectedDistance(null); // Uncheck all if no match
+                    setSelectedDistance(null); // Limpa o checkbox
                 }
             });
 
-            // Add autocomplete to the search input
+            // Adiciona a barra de pesquisa ao mapa e configura o autocomplete
             const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current);
             autocomplete.bindTo('bounds', newMap);
-
+            
             autocomplete.addListener('place_changed', () => {
                 const place = autocomplete.getPlace();
-                if (!place.geometry || !place.geometry.location) return;
+                if (!place.geometry || !place.geometry.location) return; // Manuseio de erro caso o lugar nao seja encontrado
 
-                newMap.panTo(place.geometry.location);
+                newMap.panTo(place.geometry.location); //Move o mapa para o lugar
                 newMap.setZoom(15);
-                newCircle.setCenter(place.geometry.location);
-                setCircleCenter({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
+                newCircle.setCenter(place.geometry.location); //Move o circulo para o lugar
+                setCircleCenter({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }); //Atualiza o centro do circulo
             });
         };
 
-        const loadScript = () => {
-            if (!document.querySelector('script[src*="maps.googleapis.com"]')) {
-                const script = document.createElement('script');
-                script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`;
+        const loadScript = () => { // Carrega o script do google maps
+            if (!document.querySelector('script[src*="maps.googleapis.com"]')) { // Verifica se o script ja foi carregado
+                const script = document.createElement('script'); // Cria o script
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`; // URL do script
                 script.async = true;
                 script.defer = true;
-                document.body.appendChild(script);
+                script.setAttribute("loading", "lazy");  // Adds loading=lazy
+                document.body.appendChild(script); // Adiciona o script
 
-                script.onload = () => setMapLoaded(true);
+                script.onload = () => setMapLoaded(true); // Define que o mapa foi carregado
             } else {
-                setMapLoaded(true);
+                setMapLoaded(true); // Define que o mapa foi carregado
             }
         };
 
-        if (!window.google) {
-            loadScript();
-            window.initMap = initMap;
+        if (!window.google) { // Verifica se o google maps ja foi carregado na pagina
+            loadScript(); // Carrega o script do google maps caso nao tenha sido carregado
+            window.initMap = initMap; // Define initMap como propriedade global
         } else {
-            initMap();
+            initMap(); // inicia o mapa com os parametros definidos
         }
 
         return () => {
-            delete window.initMap;
+            delete window.initMap; // Limpa a função global
         };
     }, []);
 
-    // Handle checkbox changes
+    // Manuseia mudanças no checkbox
     const handleCheckboxChange = (distance) => {
         setSelectedDistance(distance);
 
         if (circle) {
-            const currentCenter = circle.getCenter(); // Get the current center
-            circle.setRadius(radiusMapping[distance]); // Set the new radius
-            circle.setCenter(currentCenter); // Maintain the current position
+            const currentCenter = circle.getCenter(); // Get o centro atual
+            circle.setRadius(radiusMapping[distance]); // Set o novo raio
+            circle.setCenter(currentCenter); // Set o centro atual
         }
     };
 
-    const jsonData = {
+    const jsonData = { // cria o json com as informacoes necessarias para a busca e notificaçao
         message: messageBody,
         title: messageTitle,
-        latitude: Number(circleCenter.lat),  // Ensuring it's a number
-        longitude: Number(circleCenter.lng),  // Ensuring it's a number
-        radius: Number(circleRadius),  // Ensuring it's a number
+        latitude: Number(circleCenter.lat),  
+        longitude: Number(circleCenter.lng), 
+        radius: Number(circleRadius), 
     };
     
-    const showSnackbar = (messageCode) => {
+    const showSnackbar = (messageCode) => { // Mostra o snackbar
         const snackbar = document.getElementById("snackbar");
         snackbar.className = "show";
-        setTimeout(() => {
+        setTimeout(() => { // Esconde o snackbar apos 3 segundos
           snackbar.className = snackbar.className.replace("show", "");
         }, 3000);
-        if (messageCode == 1)
+        if (messageCode == 1) // Verifica o codigo da mensagem
         {
             setSnackbarMessage(`Alerta enviado com sucesso!`);
         }
@@ -151,29 +153,29 @@ const Map = () => {
         }
       };
     
-    // Handle alert button click
+    // Manuseia o envio do alerta
     const handleSendAlert = async () => {
-        if (!messageTitle || !messageBody) {
-            showSnackbar(3);
+        if (!messageTitle || !messageBody) { // Verifica se os campos estao preenchidos
+            showSnackbar(3); // Mostra a mensagem de erro caso os campos nao estao preenchidos
             return;
         }
         try {
-            const response = await fetch('http://localhost:3000/push', {
+            const response = await fetch('http://localhost:3000/push', { // Envia os dados para o servidor
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(jsonData),  // Stringify the object before sending
+                body: JSON.stringify(jsonData),  // Stringify o json para enviar
             });
     
-            if (!response.ok) {
-                showSnackbar(2);
+            if (!response.ok) { // Verifica se a resposta foi bem sucedida
+                showSnackbar(2); // Mostra a mensagem de erro caso a resposta nao for bem sucedida
                 throw new Error(`Server error: ${response.status}`);
             }
             else {
-                showSnackbar(1);
+                showSnackbar(1); // Mostra a mensagem de sucesso
             }
-            const result = await response.json();
+            const result = await response.json(); 
             console.log('Response from server:', result);
         } catch (error) {
             console.error('Error sending data:', error);
@@ -182,7 +184,7 @@ const Map = () => {
     };
     
 
-    if (!mapLoaded) return <p>Loading map...</p>;
+    if (!mapLoaded) return <p>Carregando Mapa...</p>;
 
     return (
         <div style={{ height: '100%', width: '100%' }}>

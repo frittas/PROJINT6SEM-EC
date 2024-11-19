@@ -5,20 +5,9 @@ import { FaBars, FaUser} from 'react-icons/fa';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
-  const [searchQuery, setSearchQuery] = useState(''); // Search state
-  const [selectedDistance, setSelectedDistance] = useState(null); // Estado para checkbox exclusivo
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar open/close
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value); // Update search query
-  };
-
-  const handleSearchSubmit = (event) => {
-    event.preventDefault();
-    console.log("Search for:", searchQuery); // Add your search logic here
   };
 
   return (

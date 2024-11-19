@@ -1,21 +1,20 @@
 import './login.css';
-import React, { useState } from 'react';
-import { FaUser, FaLock } from "react-icons/fa";
-import { Navigate } from 'react-router-dom';
+import React, { useState } from 'react'; 
+import { FaUser, FaLock } from "react-icons/fa"; // Importar icones
+import { Navigate } from 'react-router-dom'; // Importar Navigate para redirecionar páginas
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from './firebaseConfig'; // Importar Firebase Auth
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [shouldRedirect, setShouldRedirect] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [shouldRedirect, setShouldRedirect] = useState(false); // Variavel de controle de redirecionamento
+  const [errorMessage, setErrorMessage] = useState(''); 
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Evita o comportamento padrão de recarregar a pagina
 
-    try {
-      // Login com Firebase
+    try { // Login com Firebase
       await signInWithEmailAndPassword(auth, email, password);
       setShouldRedirect(true); // Redireciona para o dashboard se o login for bem-sucedido
     } catch (error) {
@@ -25,12 +24,13 @@ const Login = () => {
   };
 
   if (shouldRedirect) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard" />; // Redireciona para o dashboard
   }
 
   return (
     <div className="login">
-      <div className="wrapper"> {/* Container Principal da Página de Login */}
+      {/* Container Principal para o formulario de Login */}
+      <div className="wrapper"> 
         <form onSubmit={handleSubmit}>
 
           {/* Cabeçalho do sistema */}
@@ -48,7 +48,7 @@ const Login = () => {
               type="text"
               placeholder="Username"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)} // Atualiza o estado com o valor do input
               required
             />
             <FaUser className="icon" />
@@ -60,7 +60,7 @@ const Login = () => {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)} // Atualiza o estado com o valor do input
               required
             />
             <FaLock className="icon" />
@@ -73,16 +73,9 @@ const Login = () => {
             </label>
             <a href="#" className="forgot-password">Esqueci Minha Senha</a> {/* INSERIR LINK */}
           </div>
-
+          
           {/* Botão de login */}
           <button type="submit" className="btn-login">Login</button>
-
-          {/* Link de registro */}
-          <div className="register-link">
-            <p>
-              Não tem uma conta? <a href="#">Clique Aqui!</a>
-            </p>
-          </div>
         </form>
       </div>
     </div>

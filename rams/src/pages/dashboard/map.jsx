@@ -128,20 +128,19 @@ const Map = () => {
 
     const showSnackbar = (messageCode) => {
         const snackbar = document.getElementById("snackbar");
+        const messages = {
+            1: { message: `Alerta enviado com sucesso!`, color: '#29ad65' },
+            2: { message: `Erro ao enviar alerta!`, color: 'red' },
+            3: { message: `Preencha todos os campos!`, color: 'red' },
+            default: { message: `Erro ao enviar alerta!`, color: 'red' },
+        };
+        const { message, color } = messages[messageCode] || messages.default;
+        snackbar.style.backgroundColor = color;
+        snackbar.innerText = message;
         snackbar.className = "show";
         setTimeout(() => {
             snackbar.className = snackbar.className.replace("show", "");
         }, 3000);
-
-        if (messageCode === 1) {
-            setSnackbarMessage(`Alerta enviado com sucesso!`);
-        } else if (messageCode === 2) {
-            setSnackbarMessage(`Erro ao enviar alerta!`);
-        } else if (messageCode === 3) {
-            setSnackbarMessage(`Preencha todos os campos!`);
-        } else {
-            setSnackbarMessage(`Erro ao enviar alerta!`);
-        }
     };
 
     const handleSendAlert = async () => {

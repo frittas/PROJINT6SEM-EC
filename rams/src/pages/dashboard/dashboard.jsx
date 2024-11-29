@@ -13,7 +13,7 @@ function App() {
   };
 
   const redirectToLogin = () => {
-    navigate("/"); // Redireciona para a página inicial
+    window.location.assign('/'); // Redireciona para a página inicial
   };
 
   return (

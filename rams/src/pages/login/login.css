@@ -97,7 +97,18 @@
     margin: -15px 0 15px;
 }
 
+.options2 {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 14.5px;
+    margin: -15px 0 15px;
+}
+
 .options label input {
+    margin-right: 4px;
+}
+
+.options2 label input {
     margin-right: 4px;
 }
 
@@ -112,7 +123,17 @@
     text-decoration: none;
 }
 
+.options2 a {
+    color: var(--laranja-rams);
+    text-decoration: none;
+}
+
 .options a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.options2 a:hover {
     text-decoration: underline;
     cursor: pointer;
 }

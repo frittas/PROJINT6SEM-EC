@@ -5,7 +5,7 @@ import { sendPasswordResetEmail } from 'firebase/auth';
     
   return (
     <div>
-
+      <h1>Esqueceu sua senha?</h1>
     </div>
   );
 

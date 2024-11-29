@@ -8,7 +8,8 @@ import { auth } from './firebaseConfig'; // Importar Firebase Auth
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [shouldRedirect, setShouldRedirect] = useState(false); // Variavel de controle de redirecionamento
+  const [shouldRedirectDashboard, setShouldRedirectDashboard] = useState(false); // Variavel de controle de redirecionamento
+  const [shouldRedirectRememberPassword, setShouldRedirectRememberPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(''); 
 
   const handleSubmit = async (e) => {
@@ -16,15 +17,19 @@ const Login = () => {
 
     try { // Login com Firebase
       await signInWithEmailAndPassword(auth, email, password);
-      setShouldRedirect(true); // Redireciona para o dashboard se o login for bem-sucedido
+      setShouldRedirectDashboard(true); // Redireciona para o dashboard se o login for bem-sucedido
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       setErrorMessage('Falha ao autenticar. Verifique seu email e senha.');
     }
   };
 
-  if (shouldRedirect) {
+  if (shouldRedirectDashboard) {
     return <Navigate to="/dashboard" />; // Redireciona para o dashboard
+  }
+
+  if (shouldRedirectRememberPassword) {
+    return <Navigate to="/remember-password" />; // Redireciona para a página de esqueci minha senha
   }
 
   return (
@@ -71,7 +76,7 @@ const Login = () => {
             <label>
               <input type="checkbox" /> Lembrar-Me
             </label>
-            <a href="#" className="forgot-password">Esqueci Minha Senha</a> {/* INSERIR LINK */}
+            <a onClick={() => setShouldRedirectRememberPassword(true)} className="forgot-password">Esqueci Minha Senha</a> {/* INSERIR LINK */}
           </div>
           
           {/* Botão de login */}

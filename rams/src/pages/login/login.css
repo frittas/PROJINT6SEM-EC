@@ -114,6 +114,7 @@
 
 .options a:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
 
 /* ===== Botão de Login ===== */

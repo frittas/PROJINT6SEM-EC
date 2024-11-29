@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'; // Usar o hook useNavigate para 
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
-  const navigate = useNavigate(); // Inicializa o hook para navegação
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar open/close

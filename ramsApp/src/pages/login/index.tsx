@@ -61,8 +61,12 @@ export default function Login() {
     }
   }
 
-  async function getSignup() {
+  async function signUp() {
     navigation.navigate("Signup");
+  }
+
+  async function lostPassword() {
+    navigation.navigate("LostPass");
   }
 
   return (
@@ -100,12 +104,12 @@ export default function Login() {
           </View>
         </View>
         <View style={style.footer}>
-          <Pressable onPress={() => Alert.alert("Esqueci senha")}>
+          <Pressable onPress={lostPassword}>
             <Text style={style.infoTextLink}> Esqueceu a senha?</Text>
           </Pressable>
           <View style={style.infoContainer}>
             <Text style={style.infoText}>Não tem uma conta?</Text>
-            <Pressable onPress={getSignup}>
+            <Pressable onPress={signUp}>
               <Text style={style.infoTextLink}> Clique aqui!</Text>
             </Pressable>
           </View>

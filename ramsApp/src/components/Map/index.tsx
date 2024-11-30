@@ -41,7 +41,7 @@ export default function Map() {
       pitch: 70,
       center: selectedLocation as any,
     });
-  }, []);
+  }, [selectedLocation]);
 
   return (
     <View style={style.container}>

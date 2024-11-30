@@ -5,6 +5,7 @@ import { themes } from "../global/themes";
 import BottomRoutes from "./bottom.routes";
 import Signup from "../pages/signup";
 import { LoadingContext, LoadingProvider } from "../context/loaderContext";
+import LostPassword from "../pages/lostPassword";
 export default function Routes() {
   const Stack = createStackNavigator();
   return (
@@ -19,6 +20,7 @@ export default function Routes() {
       }}
     >
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="LostPass" component={LostPassword} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="BottomRoutes" component={BottomRoutes} />
     </Stack.Navigator>

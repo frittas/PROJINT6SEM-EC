@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Animated,
+  Alert,
 } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { CustomInput } from "../components/AnimatedInputField";
@@ -38,12 +39,8 @@ export const AuthProviderList = (props: any): any => {
 
   const navigation = useNavigation<NavigationProp<any>>();
 
-  const onMapPress = (e: any) => {
+  const onMapPress = (e: any) => {    
     setSelectedLocation(e.nativeEvent.coordinate);
-    mapRef?.current?.animateCamera({
-      pitch: 70,
-      center: e.nativeEvent.coordinate,
-    });
   };
 
   const onOpenNewLocation = () => {
@@ -95,6 +92,10 @@ export const AuthProviderList = (props: any): any => {
 
   const onCloseList = async () => {};
 
+  const onClickListItem = async (location: any) => {
+    setSelectedLocation(location.location);
+  };
+
   const modalAdd = () => {
     return (
       <View style={style.container}>
@@ -140,7 +141,12 @@ export const AuthProviderList = (props: any): any => {
               //   <FontAwesome size={20} name="close"></FontAwesome>
               // </TouchableOpacity>
               <Swipeable key={index} renderRightActions={renderRightActions}>
-                <TouchableOpacity style={style.row}>
+                <TouchableOpacity
+                  style={style.row}
+                  onPress={() => {
+                    onClickListItem(location);
+                  }}
+                >
                   <Text style={style.rowText}>{location.title}</Text>
                   <FontAwesome
                     style={style.iconLeft}

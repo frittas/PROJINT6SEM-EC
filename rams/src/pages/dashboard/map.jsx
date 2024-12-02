@@ -123,7 +123,7 @@ const Map = () => {
         title: messageTitle,
         latitude: Number(circleCenter.lat),
         longitude: Number(circleCenter.lng),
-        radius: Number(circleRadius),
+        radius: Number(circleRadius/1000),
     };
 
     const showSnackbar = (messageCode) => {
@@ -149,7 +149,7 @@ const Map = () => {
             return;
         }
         try {
-            const response = await fetch('http://localhost:3000/push', {
+            const response = await fetch('http://localhost:3000/api/push', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
